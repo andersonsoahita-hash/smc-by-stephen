@@ -410,8 +410,8 @@ function SMCCORE(db,X){
   register:function(r){
    var e=norm(r.email);if(!r.name||!e||e.indexOf('@')<1||!r.pwd)return no('Nom, email et mot de passe requis.');
    if(find(e))return no('Un compte existe déjà avec cet email.');
-   var first=users().length===0,co=r.coach?users().filter(function(u){return u.code===String(r.coach).toLowerCase()})[0]:null;
-   var u={email:e,name:String(r.name).trim(),pwd:r.pwd,role:first?'admin':'student',status:first?'active':'pending',lv:first?ALLLV:['BG'],open:[],blk:[],coach:co?co.email:'',cohort:'',done:{},created:X.now(),code:first?rid(6):''};
+   var first=!!X.firstAdmin&&users().length===0,co=r.coach?users().filter(function(u){return u.code===String(r.coach).toLowerCase()})[0]:null;
+   var u={email:e,name:String(r.name).trim(),pwd:r.pwd,role:first?'admin':'student',status:first?'active':'pending',lv:first?ALLLV:['BG'],open:[],blk:[],coach:co?co.email:'',cohort:'',done:{},created:X.now(),code:first?rid(6):'',tmp:0};
    save(u);log(e,first?'création du compte administrateur':'demande d’accès',e,co?'coach '+co.email:'sans coach');
    return ok({user:pub(u),first:first});},
   login:function(r){
@@ -427,7 +427,7 @@ function SMCCORE(db,X){
    if(u.role==='coach'&&!u.code)u.code=rid(6);save(u);log(me.email,'modification utilisateur',u.email,JSON.stringify(r.patch));return ok({user:pub(u)});},
   userCreate:function(r,me){
    if(me.role!=='admin')return no('Réservé à l’administrateur.');var e=norm(r.email);if(!e||!r.name||!r.pwd)return no('Champs requis.');if(find(e))return no('Email déjà utilisé.');
-   var role=r.role==='coach'?'coach':'student',u={email:e,name:r.name,pwd:r.pwd,role:role,status:'active',lv:role==='coach'?ALLLV:['BG'],open:[],blk:[],coach:'',cohort:'',done:{},created:X.now(),code:role==='coach'?rid(6):''};
+   var role=r.role==='coach'?'coach':'student',u={email:e,name:r.name,pwd:r.pwd,role:role,status:'active',lv:role==='coach'?ALLLV:['BG'],open:[],blk:[],coach:'',cohort:'',done:{},created:X.now(),code:role==='coach'?rid(6):'',tmp:0};
    save(u);log(me.email,'création de compte '+role,e);return ok({user:pub(u)});},
   progress:function(r,me){
    if(r.done)for(var k in r.done)me.done[k]=1;
@@ -456,6 +456,8 @@ function SMCCORE(db,X){
   levelFam:function(r,me){if(ALLLV.indexOf(r.lv)<0||!X.byLevel)return no('Contenu indisponible.');
    if(me.role==='student'&&!(me.status==='active'&&(r.lv==='BG'||me.lv.indexOf(r.lv)>=0)))return no('Test non accessible.');
    return ok(X.byLevel(r.lv).map(function(l){return{id:l.id,fam:l.fam,why:l.why}}));},
+  pwdChange:function(r,me){if(!r.pwd||r.pwd===me.pwd)return no('Choisis un nouveau mot de passe différent.');if(me.pwd!==r.old)return no('Ancien mot de passe incorrect.');me.pwd=r.pwd;me.tmp=0;save(me);log(me.email,'mot de passe modifié',me.email);return ok({user:pub(me)});},
+  pwdReset:function(r,me){if(me.role!=='admin')return no('Réservé à l’administrateur.');var u=find(r.email);if(!u)return no('Introuvable.');u.pwd=r.pwd;u.tmp=1;save(u);log(me.email,'mot de passe provisoire attribué',u.email);return ok(true);},
   log:function(r,me){if(me.role!=='admin')return no('Réservé.');return ok(db.all('log').slice(-300).reverse())}
  };
  return function(r){
@@ -477,7 +479,7 @@ const fmt=t=>new Date(t).toLocaleString('fr-FR',{dateStyle:'short',timeStyle:'sh
 async function hash(s){try{const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode('smc|'+s));return[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('')}catch(e){let h1=0xdeadbeef,h2=0x41c6ce57;for(let i=0;i<s.length;i++){const c=s.charCodeAt(i);h1=Math.imul(h1^c,2654435761);h2=Math.imul(h2^c,1597334677)}return'f'+(h1>>>0).toString(16)+(h2>>>0).toString(16)}}
 /* ---- backend : local ou Apps Script ---- */
 const LDB={all:t=>LSg('smc_pf_'+t,[]),save:(t,r)=>LSs('smc_pf_'+t,r)};
-const LX={now:()=>Date.now(),test:true,mail:()=>{}};
+const LX={now:()=>Date.now(),test:true,firstAdmin:true,mail:()=>{}};
 const core=SMCCORE(LDB,LX);
 async function api(action,data){
  const req=Object.assign({action,token:(LSg('smc_sess',{})||{}).token},data||{});
@@ -501,7 +503,7 @@ function authView(mode){
  const code=new URLSearchParams(location.search).get('c')||LSg('smc_coachcode','');if(code)LSs('smc_coachcode',code);
  const reg=mode==='reg';
  m().innerHTML=`<div class="auth"><div class="logo">${SMC.BRAND?SMC.BRAND(54):''}</div><h2>${reg?'Demander mon accès':'Connexion'}</h2><p class="sub">${reg?'Ta demande est examinée par le formateur. Tu recevras l’accès dès sa validation.':'Content de te revoir.'}</p>
- <form id="af">${reg?'<label>Nom complet<input name="name" required autocomplete="name"></label>':''}<label>Email<input name="email" type="email" required autocomplete="email"></label><label>Mot de passe<input name="pwd" type="password" required minlength="6" autocomplete="${reg?'new-password':'current-password'}"></label>
+ <form id="af">${reg?'<label>Nom complet<input name="name" required autocomplete="name"></label>':''}<label>Email<input name="email" type="email" required autocomplete="email"></label><label>${reg?'Crée un mot de passe pour SMC':'Mot de passe SMC'}<small>Un mot de passe propre à cette plateforme. N’utilise <b>jamais</b> ton mot de passe Google.</small><input name="pwd" type="password" required minlength="6" autocomplete="${reg?'new-password':'current-password'}"></label>
  ${reg?`<label>Code de ton formateur (facultatif)<input name="coach" value="${esc(code)}" placeholder="ex. k3x9ab"></label><label class="ck"><input type="checkbox" required> J’ai lu et j’accepte les <a href="#" data-l="1">conditions, la politique de remboursement et l’avertissement sur les risques</a>.</label>`:''}
  <div id="ae" class="err"></div><button class="pri">${reg?'Envoyer ma demande':'Se connecter'}</button></form>
  <p class="sub"><a href="#" id="sw">${reg?'J’ai déjà un compte':'Pas encore de compte ? Demander l’accès'}</a></p></div>`;
@@ -510,7 +512,9 @@ function authView(mode){
  $('#af').onsubmit=async e=>{e.preventDefault();const f=Object.fromEntries(new FormData(e.target));f.pwd=await hash(f.email.toLowerCase().trim()+':'+f.pwd);
   const r=await api(reg?'register':'login',f);if(!r.ok){$('#ae').textContent=r.err;return}
   if(reg){const l=await api('login',{email:f.email,pwd:f.pwd});if(l.ok){LSs('smc_sess',{token:l.data.token,user:l.data.user});setSess(l.data.token,l.data.user)}else{authView('login');return}}
-  else setSess(r.data.token,r.data.user);if(PF.gate())SMC.home()}}
+  else setSess(r.data.token,r.data.user);if(PF.gate()){SMC.home();if(U.tmp)forceChange(f.pwd)}}}
+function forceChange(old){const d=modal(`<h3>Choisis ton mot de passe</h3><p>Tu as un mot de passe provisoire. Choisis le tien (6 caractères minimum, propre à SMC).</p><input id="n1" type="password" placeholder="Nouveau mot de passe"><div class="row"><button id="n2">Enregistrer</button></div><div id="n3" class="err"></div>`);d.querySelector('.x').remove();d.onclick=null;
+ $('#n2',d).onclick=async()=>{const v=$('#n1',d).value;if(v.length<6)return $('#n3',d).textContent='6 caractères minimum.';const r=await api('pwdChange',{old,pwd:await hash(U.email+':'+v)});if(!r.ok)return $('#n3',d).textContent=r.err;setSess(LSg('smc_sess',{}).token,r.data.user);d.remove()}}
 function pendingView(){m().innerHTML=`<div class="auth"><div class="logo">${SMC.BRAND?SMC.BRAND(54):''}</div><h2>Demande envoyée ✅</h2><p>Bonjour <b>${esc(U.name)}</b>, ta demande d’accès est en cours de validation par le formateur. Reviens plus tard ou actualise.</p><div class="row"><button id="rf">↻ Actualiser</button><button class="g" id="lo">Quitter</button></div></div>`;$('#rf').onclick=refresh;$('#lo').onclick=logout}
 function blockedView(){m().innerHTML=`<div class="auth"><h2>Accès bloqué</h2><p>Ton accès est suspendu. Contacte ton formateur.</p><button class="g" id="lo">Quitter</button></div>`;$('#lo').onclick=logout}
 async function refresh(){const r=await api('me');if(r.ok){const t=LSg('smc_sess',{}).token,ch=r.data.user.status!==U.status;setSess(t,r.data.user);if(ch){if(PF.gate())SMC.home()}else if(U.status==='pending')pendingView()}else if(/Session/.test(r.err||'')){logout()}}
@@ -544,12 +548,14 @@ V.outils=()=>{
  <div class="card"><b>Calculateur de lot</b><div class="grid"><label>Capital ($)<input id="c1" type="number" value="1000"></label><label>Risque (%)<input id="c2" type="number" value="1" step="0.1"></label><label>Stop-loss (pips)<input id="c3" type="number" value="20"></label></div><div id="cr" class="res"></div><small>Hypothèse : paire cotée en USD (1 pip ≈ 10 $ par lot standard). Vérifie la valeur du pip pour les autres paires.</small></div>
  <div class="card"><b>Journal de trading</b> <small>(reste sur cet appareil)</small><div class="grid"><label>Paire<input id="j1" placeholder="EUR/USD"></label><label>Sens<select id="j2"><option>Achat</option><option>Vente</option></select></label><label>Résultat (en R)<input id="j3" type="number" step="0.1" placeholder="ex. 2 ou -1"></label><label>Note<input id="j4"></label></div><button id="ja">Ajouter</button> <button class="g" id="jx">Exporter CSV</button><div id="jl"></div></div>
  <div class="card"><b>Envoyer une capture MT5 à mon coach</b><br><small>Visible 7 jours, puis supprimée.</small><div class="grid"><label>Capture<input id="s1" type="file" accept="image/*"></label><label>Commentaire<input id="s2"></label></div><button id="sa">Envoyer</button> <span id="sm"></span></div>
+ <div class="card"><b>Mon compte</b><div class="grid"><label>Ancien mot de passe<input id="w1" type="password"></label><label>Nouveau mot de passe<input id="w2" type="password"></label></div><button id="wb">Changer mon mot de passe</button> <span id="wm"></span></div>
  <div class="card"><b>Mes données</b><br><small>Efface le journal, la progression locale et les captures de cet appareil. Un code est envoyé par email pour confirmer.</small><div class="row"><button class="g" id="er">Effacer mes données…</button></div></div></div>`;
  const calc=()=>{const c=+$('#c1').value,p=+$('#c2').value,s=+$('#c3').value,r=c*p/100;$('#cr').innerHTML=s>0?`Risque : <b>${r.toFixed(2)} $</b> → lot ≈ <b>${(r/(s*10)).toFixed(2)}</b>`:''};['c1','c2','c3'].forEach(i=>$('#'+i).oninput=calc);calc();
  const draw=()=>{const j=LSg('smc_journal',[]),w=j.filter(x=>x.r>0).length,tot=j.reduce((a,x)=>a+x.r,0);$('#jl').innerHTML=j.length?`<small>${j.length} trades · gagnants ${Math.round(100*w/j.length)} % · total <b>${tot.toFixed(1)} R</b></small><table class="tb">${j.slice().reverse().slice(0,30).map(x=>`<tr><td>${x.d}</td><td>${esc(x.p)}</td><td>${x.s}</td><td style="color:${x.r>=0?'var(--up)':'var(--dn)'}">${x.r} R</td><td>${esc(x.n)}</td></tr>`).join('')}</table>`:''};draw();
  $('#ja').onclick=()=>{const r=parseFloat($('#j3').value);if(isNaN(r))return;const j=LSg('smc_journal',[]);j.push({d:new Date().toLocaleDateString('fr-FR'),p:$('#j1').value,s:$('#j2').value,r,n:$('#j4').value});LSs('smc_journal',j);draw()};
  $('#jx').onclick=()=>{const j=LSg('smc_journal',[]),c='date;paire;sens;R;note\n'+j.map(x=>[x.d,x.p,x.s,x.r,'"'+String(x.n).replace(/"/g,'""')+'"'].join(';')).join('\n'),a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['﻿'+c],{type:'text/csv'}));a.download='journal_SMC.csv';a.click()};
  $('#sa').onclick=async()=>{const f=$('#s1').files[0];if(!f)return;const img=await shrink(f),r=await api('shotAdd',{img,note:$('#s2').value});$('#sm').textContent=r.ok?'Envoyée ✓':r.err};
+ $('#wb').onclick=async()=>{if($('#w2').value.length<6)return $('#wm').textContent='6 caractères minimum.';const r=await api('pwdChange',{old:await hash(U.email+':'+$('#w1').value),pwd:await hash(U.email+':'+$('#w2').value)});$('#wm').textContent=r.ok?'Mot de passe changé ✓':r.err};
  $('#er').onclick=async()=>{const r=await api('eraseCode');if(!r.ok)return alert(r.err);const d=modal(`<h3>Confirmer l’effacement</h3><p>Un code à 6 chiffres a été envoyé à <b>${esc(U.email)}</b>.${r.data.test?`<br><small>(Mode test : code = <b>${r.data.test}</b>)</small>`:''}</p><input id="ec" placeholder="Code"><div class="row"><button id="eo">Effacer définitivement</button></div><div id="ee" class="err"></div>`);
   $('#eo',d).onclick=async()=>{const q=await api('eraseConfirm',{code:$('#ec',d).value.trim()});if(!q.ok){$('#ee',d).textContent=q.err;return}['smc_journal','smc_done','smc_used'].forEach(k=>{try{localStorage.removeItem(k)}catch(e){}});for(const k in SMC.DONE)delete SMC.DONE[k];d.remove();alert('Données effacées.');PF.view('cours')}}};
 function shrink(file){return new Promise(res=>{const im=new Image();im.onload=()=>{const k=Math.min(1,1100/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=im.width*k;c.height=im.height*k;c.getContext('2d').drawImage(im,0,0,c.width,c.height);res(c.toDataURL('image/jpeg',.6))};im.src=URL.createObjectURL(file)})}
