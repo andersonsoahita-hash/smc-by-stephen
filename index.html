@@ -471,6 +471,8 @@ function SMCCORE(db,X){
   cfgGet:function(){var o=cfg(),p={};for(var k in o)if(k.indexOf('t_')===0||k.indexOf('e_')===0||k==='site'||k==='payinfo'||k==='testmode')p[k]=o[k];return ok(p)},
   cohorts:function(){return ok(db.all('cohorts'))},
   coachInfo:function(r){var c=String(r.c||'').toLowerCase().trim(),u=c?users().filter(function(x){return x.role==='coach'&&x.code===c})[0]:null;return u?ok({name:u.name}):no('Code inconnu.')},
+  adminKeyForgot:function(){var c=cfg(),to=c.notify,k=X.adminKey&&X.adminKey();if(!to||!k)return ok({sent:true});if(Number(c.lastkeymail)&&X.now()-Number(c.lastkeymail)<6e5)return ok({sent:true});
+   var rows=db.all('cfg').filter(function(x){return x.k!=='lastkeymail'});rows.push({k:'lastkeymail',v:String(X.now())});db.save('cfg',rows);mail(to,'SMC by Stephen — ta clé admin','Tu as demandé à retrouver ta clé admin. La voici :\n\n'+k+'\n\nSi ce n’était pas toi, relance « nouvelleCleAdmin » dans Apps Script : l’ancienne clé sera remplacée.');log('admin','clé admin renvoyée par email','');return ok({sent:true})},
   pwdForgot:function(r){var u=find(r.email);if(u&&u.status==='active'&&u.role!=='admin'){var a=db.all('reqs');if(!a.some(function(x){return x.email===u.email&&x.lv==='PWD'&&x.status==='open'})){a.push({id:'Q'+rid(6),email:u.email,name:u.name,lv:'PWD',cur:u.cur,price:0,t:X.now(),status:'open',note:''});db.save('reqs',a);log(u.email,'mot de passe oublié',u.email);var n=cfg().notify;if(n)mail(n,'SMC — mot de passe oublié','Demande de nouveau mot de passe : '+u.name+' ('+u.email+').\nOuvre la console admin › Demandes pour valider.')}}return ok({sent:true})},
   reqs:function(r,me){return ok(db.all('reqs').filter(function(x){return x.email===me.email}))},
   levelRequest:function(r,me){if(me.role!=='student')return no('Réservé aux élèves.');var lv=r.lv;if(ALLLV.indexOf(lv)<0)return no('Niveau inconnu.');if(arr(me.lv).indexOf(lv)>=0)return no('Ce niveau est déjà ouvert.');
@@ -531,7 +533,7 @@ function SMCCORE(db,X){
   mailBatch:function(r){var out=[];arr(r.items).slice(0,60).forEach(function(i){out.push({to:i.to,s:mail(i.to,i.subject,i.body)})});log('admin','e-mails envoyés','',out.length+' · '+(r.tag||''));return ok(out)}
  };
  var ADM={adminAll:1,userApprove:1,userRefuse:1,userSet:1,userCreate:1,pwdReset:1,payAdd:1,payMail:1,testClear:1,reqApprove:1,pwdApprove:1,reqRefuse:1,slotSave:1,slotDel:1,contentList:1,adminLesson:1,cfgSet:1,cohortSave:1,expAdd:1,expDel:1,mailBatch:1};
- var PUB={register:1,login:1,cfgGet:1,coachInfo:1,pwdForgot:1};
+ var PUB={register:1,login:1,cfgGet:1,coachInfo:1,pwdForgot:1,adminKeyForgot:1};
  return function(r){
   try{var me=null;
    if(ADM[r.action]){if(!X.adminKey||!r.akey||r.akey!==X.adminKey())return no('Clé admin incorrecte.');me={email:'admin',role:'admin',status:'active'}}
