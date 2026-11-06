@@ -390,80 +390,112 @@ window.SMC={DONE,LS,LOGO,BRAND,who,formateur,home,lessons:()=>lessons(),fiche,de
 document.addEventListener('DOMContentLoaded',()=>{const r=$('#role');if(r)r.value=ROLE();const w=$('#who');if(w&&NAME())w.value=NAME();home()});
 })();
 
-/* SMC by Stephen — logique métier unique (utilisée en local par la page ET par Apps Script) */
+/* SMC by Stephen — logique métier unique (page + Apps Script) */
+function SMCSHA(s){
+ s=unescape(encodeURIComponent(s));
+ function rr(v,a){return(v>>>a)|(v<<(32-a))}
+ var mp=Math.pow,mw=mp(2,32),i,j,r='',w=[],al=s.length*8,h=SMCSHA.h=SMCSHA.h||[],k=SMCSHA.k=SMCSHA.k||[],pc=k.length,ic={};
+ for(var c=2;pc<64;c++){if(!ic[c]){for(i=0;i<313;i+=c)ic[i]=c;h[pc]=(mp(c,.5)*mw)|0;k[pc++]=(mp(c,1/3)*mw)|0}}
+ s+='\x80';while(s.length%64-56)s+='\x00';
+ for(i=0;i<s.length;i++){j=s.charCodeAt(i);w[i>>2]|=j<<((3-i)%4)*8}
+ w[w.length]=((al/mw)|0);w[w.length]=al;
+ for(j=0;j<w.length;){var x=w.slice(j,j+=16),oh=h;h=h.slice(0,8);
+  for(i=0;i<64;i++){var w15=x[i-15],w2=x[i-2],a=h[0],e=h[4];
+   var t1=h[7]+(rr(e,6)^rr(e,11)^rr(e,25))+((e&h[5])^((~e)&h[6]))+k[i]+(x[i]=(i<16)?x[i]:(x[i-16]+(rr(w15,7)^rr(w15,18)^(w15>>>3))+x[i-7]+(rr(w2,17)^rr(w2,19)^(w2>>>10)))|0);
+   var t2=(rr(a,2)^rr(a,13)^rr(a,22))+((a&h[1])^(a&h[2])^(h[1]&h[2]));
+   h=[(t1+t2)|0].concat(h);h[4]=(h[4]+t1)|0}
+  for(i=0;i<8;i++)h[i]=(h[i]+oh[i])|0}
+ for(i=0;i<8;i++)for(j=3;j+1;j--){var b=(h[i]>>(j*8))&255;r+=((b<16)?0:'')+b.toString(16)}
+ return r}
+function SMCPW(email,pwd){return SMCSHA('smc|'+String(email).toLowerCase().trim()+':'+pwd)}
 function SMCCORE(db,X){
- var ALLLV=['BG','IM','AD','MG','OUT'],WEEK=7*864e5;
+ var ALLLV=['BG','IM','AD','MG','OUT'],WEEK=7*864e5,SITE='https://andersonsoahita-hash.github.io/smc-by-stephen/';
  function norm(e){return String(e||'').toLowerCase().trim()}
- function rid(n){var s='',c='abcdefghjkmnpqrstuvwxyz23456789';for(var i=0;i<n;i++)s+=c[Math.floor(Math.random()*c.length)];return s}
+ function rid(n,al){var s='',c=al||'abcdefghjkmnpqrstuvwxyz23456789';for(var i=0;i<n;i++)s+=c[Math.floor(Math.random()*c.length)];return s}
  function users(){return db.all('users')}
  function find(e){e=norm(e);return users().filter(function(u){return u.email===e})[0]}
  function pub(u){if(!u)return null;var o={};for(var k in u)if(k!=='pwd')o[k]=u[k];return o}
  function save(u){var a=users().filter(function(x){return x.email!==u.email});a.push(u);db.save('users',a)}
  function log(by,act,target,info){var a=db.all('log');a.push({t:X.now(),by:by,act:act,target:target||'',info:info||''});db.save('log',a.slice(-2000))}
  function arr(v){return Array.isArray(v)?v:[]}
- function sessOf(tok){var s=db.all('sess').filter(function(x){return x.tok===tok&&x.exp>X.now()})[0];return s?find(s.email):null}
  function ok(d){return{ok:true,data:d}} function no(m){return{ok:false,err:m}}
  function cfg(){var o={};db.all('cfg').forEach(function(r){o[r.k]=r.v});return o}
- function myStudents(me){return users().filter(function(u){return u.role==='student'&&(me.role==='admin'||u.coach===me.email)})}
+ function site(){return cfg().site||SITE}
+ function mail(to,sub,body){var s='envoyé';try{X.mail(to,sub,body)}catch(e){s='échec : '+e.message}var a=db.all('mails');a.push({t:X.now(),to:to,subject:sub,status:s});db.save('mails',a.slice(-1000));return s}
+ function sessOf(tok){var s=db.all('sess').filter(function(x){return x.tok===tok&&x.exp>X.now()})[0];return s?find(s.email):null}
+ function myStudents(me){return users().filter(function(u){return u.role==='student'&&u.coach===me.email})}
  function purge(){var a=db.all('shots'),keep=[];a.forEach(function(s){if(s.t>X.now()-WEEK)keep.push(s);else if(X.delImg)X.delImg(s.img)});if(keep.length!==a.length)db.save('shots',keep)}
+ function newUser(o){return{email:norm(o.email),name:String(o.name||'').trim(),pwd:'',role:o.role||'student',status:o.status||'pending',lv:o.lv||['BG'],open:[],blk:[],coach:o.coach||'',cohort:'',done:{},created:X.now(),code:'',tmp:0,tel:o.tel||'',act:o.act||'',age:o.age||'',want:o.want||'student',total:Number(o.total)||0,until:0,device:'',seen:0,note:''}}
+ function grant(u,r){var p=rid(8);u.pwd=SMCPW(u.email,p);u.tmp=1;u.status='active';u.device='';
+  if(r.role)u.role=r.role;if(u.role==='coach'&&!u.code)u.code=rid(6);if(r.lv)u.lv=r.lv;if(r.total!==undefined)u.total=Number(r.total)||0;if(r.coach!==undefined)u.coach=r.coach;if(r.cohort!==undefined)u.cohort=r.cohort;if(r.days)u.until=X.now()+r.days*864e5;
+  save(u);var link=u.role==='coach'?site()+'?c='+u.code:'';
+  var body='Bonjour '+u.name.split(' ')[0]+',\n\nTa demande d’accès à SMC by Stephen est validée.\n\nSite : '+site()+'\nIdentifiant : '+u.email+'\nMot de passe provisoire : '+p+'\n\nConnecte-toi, puis choisis ton propre mot de passe. L’accès est lié au premier appareil que tu utilises (téléphone ou ordinateur) : garde le même.\n'+(link?'\nTon lien personnel à donner à tes élèves : '+link+'\n':'')+'\nÀ bientôt,\nStephen — SMC by Stephen';
+  var st=mail(u.email,'SMC by Stephen — ton accès est prêt',body);return{pwd:p,mail:st}}
  var A={
+  /* ---- application utilisateurs ---- */
   register:function(r){
-   var e=norm(r.email);if(!r.name||!e||e.indexOf('@')<1||!r.pwd)return no('Nom, email et mot de passe requis.');
-   if(find(e))return no('Un compte existe déjà avec cet email.');
-   var first=!!X.firstAdmin&&users().length===0,co=r.coach?users().filter(function(u){return u.code===String(r.coach).toLowerCase()})[0]:null;
-   var u={email:e,name:String(r.name).trim(),pwd:r.pwd,role:first?'admin':'student',status:first?'active':'pending',lv:first?ALLLV:['BG'],open:[],blk:[],coach:co?co.email:'',cohort:'',done:{},created:X.now(),code:first?rid(6):'',tmp:0};
-   save(u);log(e,first?'création du compte administrateur':'demande d’accès',e,co?'coach '+co.email:'sans coach');
-   return ok({user:pub(u),first:first});},
+   var e=norm(r.email);if(!r.name||!e||e.indexOf('@')<1)return no('Nom et email requis.');
+   var old=find(e);if(old&&old.status!=='refused')return no(old.status==='pending'?'Ta demande est déjà en cours de validation.':'Un accès existe déjà avec cet email. Utilise « J’ai déjà un accès ».');
+   var co=r.coach?users().filter(function(u){return u.code===String(r.coach).toLowerCase().trim()})[0]:null;
+   var u=newUser({email:e,name:r.name,tel:r.tel,act:r.act,age:r.age,want:r.want==='coach'?'coach':'student',coach:co?co.email:''});save(u);
+   log(e,'demande d’accès',e,(u.want==='coach'?'formateur':'élève')+(co?' · via '+co.name:''));
+   var n=cfg().notify;if(n)mail(n,'SMC — nouvelle demande d’accès','Nouvelle demande : '+u.name+' ('+e+', '+u.tel+')'+(co?' via le formateur '+co.name:'')+'.\nOuvre la console admin pour valider.');
+   return ok({sent:true});},
   login:function(r){
-   var u=find(r.email);if(!u||u.pwd!==r.pwd)return no('Email ou mot de passe incorrect.');
-   if(u.status==='blocked')return no('Accès bloqué. Contacte le formateur.');
+   var u=find(r.email);if(!u||!u.pwd||u.pwd!==r.pwd)return no('Email ou mot de passe incorrect. Si ta demande n’est pas encore validée, attends l’email d’accès.');
+   if(u.status==='blocked')return no('Accès coupé. Contacte ton formateur.');if(u.status!=='active')return no('Ta demande n’est pas encore validée.');
+   if(u.until&&u.until<X.now())return no('Ton accès a expiré. Contacte ton formateur.');
+   if(u.device&&r.device&&u.device!==r.device)return no('Cet accès est lié à un autre appareil. Demande à ton formateur de libérer l’appareil.');
+   if(!u.device&&r.device)u.device=r.device;u.seen=X.now();save(u);
    var tok=rid(24),s=db.all('sess').filter(function(x){return x.exp>X.now()});s.push({tok:tok,email:u.email,exp:X.now()+30*864e5});db.save('sess',s);
    return ok({token:tok,user:pub(u)});},
   me:function(r,me){return ok({user:pub(me)})},
   users:function(r,me){if(me.role==='student')return no('Réservé.');return ok(me.role==='admin'?users().map(pub):myStudents(me).map(pub))},
-  userSet:function(r,me){
-   if(me.role!=='admin')return no('Réservé à l’administrateur.');var u=find(r.email);if(!u)return no('Introuvable.');
-   ['status','role','lv','open','blk','coach','cohort','name'].forEach(function(k){if(r.patch&&r.patch[k]!==undefined)u[k]=r.patch[k]});
-   if(u.role==='coach'&&!u.code)u.code=rid(6);save(u);log(me.email,'modification utilisateur',u.email,JSON.stringify(r.patch));return ok({user:pub(u)});},
-  userCreate:function(r,me){
-   if(me.role!=='admin')return no('Réservé à l’administrateur.');var e=norm(r.email);if(!e||!r.name||!r.pwd)return no('Champs requis.');if(find(e))return no('Email déjà utilisé.');
-   var role=r.role==='coach'?'coach':'student',u={email:e,name:r.name,pwd:r.pwd,role:role,status:'active',lv:role==='coach'?ALLLV:['BG'],open:[],blk:[],coach:'',cohort:'',done:{},created:X.now(),code:role==='coach'?rid(6):'',tmp:0};
-   save(u);log(me.email,'création de compte '+role,e);return ok({user:pub(u)});},
-  progress:function(r,me){
-   if(r.done)for(var k in r.done)me.done[k]=1;
-   if(me.done.EX_BG&&me.lv.indexOf('IM')<0&&me.role==='student'){me.lv.push('IM');log(me.email,'test d’entrée réussi → niveau Intermediate ouvert',me.email)}
-   save(me);return ok({user:pub(me)});},
-  payAdd:function(r,me){
-   if(me.role!=='admin')return no('Réservé à l’administrateur.');var u=find(r.email);if(!u)return no('Élève introuvable.');var amt=Number(r.amount);if(!(amt>0))return no('Montant invalide.');
-   var a=db.all('pay'),d=new Date(X.now()),ym=d.getFullYear()+('0'+(d.getMonth()+1)).slice(-2),n=a.filter(function(p){return String(p.id).indexOf('R-'+ym)===0}).length+1;
-   var p={id:'R-'+ym+'-'+('000'+n).slice(-4),email:u.email,name:u.name,amount:amt,method:r.method||'Espèces',ref:r.ref||'',lv:arr(r.lv),t:X.now(),by:me.email};a.push(p);db.save('pay',a);
-   arr(r.lv).forEach(function(l){if(u.lv.indexOf(l)<0)u.lv.push(l)});if(u.status==='pending')u.status='active';save(u);log(me.email,'paiement enregistré',u.email,p.id+' · '+amt+' Ar · '+p.method);return ok({pay:p});},
+  progress:function(r,me){if(r.done)for(var k in r.done)me.done[k]=1;
+   if(me.done.EX_BG&&me.lv.indexOf('IM')<0&&me.role==='student'){me.lv.push('IM');log(me.email,'test d’entrée réussi → Intermediate ouvert',me.email)}
+   me.seen=X.now();save(me);return ok({user:pub(me)});},
+  pwdChange:function(r,me){if(!r.pwd||r.pwd===me.pwd)return no('Choisis un nouveau mot de passe différent.');if(me.pwd!==r.old)return no('Ancien mot de passe incorrect.');me.pwd=r.pwd;me.tmp=0;save(me);log(me.email,'mot de passe modifié',me.email);return ok({user:pub(me)});},
   pays:function(r,me){var a=db.all('pay');return ok(me.role==='admin'?a:a.filter(function(p){return p.email===me.email}))},
-  cfgGet:function(){return ok(cfg())},
-  cfgSet:function(r,me){if(me.role!=='admin')return no('Réservé.');var o=cfg(),rows=[];for(var k in r.v)o[k]=r.v[k];for(var j in o)rows.push({k:j,v:o[j]});db.save('cfg',rows);log(me.email,'tarifs modifiés','',JSON.stringify(r.v));return ok(o);},
-  cohorts:function(r,me){return ok(db.all('cohorts'))},
-  cohortSave:function(r,me){if(me.role!=='admin')return no('Réservé.');var a=db.all('cohorts'),id=r.id||('P'+(a.length+1));a=a.filter(function(c){return c.id!==id});a.push({id:id,name:r.name,start:r.start||'',lv:r.lv||'BG'});db.save('cohorts',a);log(me.email,'promotion enregistrée',id,r.name);return ok(a);},
+  cfgGet:function(){var o=cfg(),p={};for(var k in o)if(k.indexOf('t_')===0||k==='site')p[k]=o[k];return ok(p)},
+  cohorts:function(){return ok(db.all('cohorts'))},
   attendSave:function(r,me){if(me.role==='student')return no('Réservé.');var a=db.all('att').filter(function(x){return !(x.cohort===r.cohort&&x.date===r.date)});a.push({cohort:r.cohort,date:r.date,present:arr(r.present),by:me.email});db.save('att',a);log(me.email,'présences enregistrées',r.cohort,r.date);return ok(true);},
   attends:function(r,me){if(me.role==='student')return no('Réservé.');return ok(db.all('att').filter(function(x){return !r.cohort||x.cohort===r.cohort}))},
   shotAdd:function(r,me){purge();if(!r.img||r.img.length>900000)return no('Image trop lourde.');var a=db.all('shots'),id=rid(8);a.push({id:id,email:me.email,name:me.name,coach:me.coach,t:X.now(),note:String(r.note||'').slice(0,300),img:X.putImg?X.putImg(id,r.img):r.img});db.save('shots',a);return ok({id:id});},
   shots:function(r,me){purge();var a=db.all('shots').filter(function(s){return me.role==='admin'||s.coach===me.email||s.email===me.email});return ok(a.map(function(s){return{id:s.id,email:s.email,name:s.name,t:s.t,note:s.note,img:X.getImg?X.getImg(s.img):s.img}}))},
   eraseCode:function(r,me){var c=String(Math.floor(100000+Math.random()*900000)),s=db.all('sess').filter(function(x){return !(x.email===me.email&&x.erase)});s.push({tok:'E'+me.email,email:me.email,erase:c,exp:X.now()+10*6e4});db.save('sess',s);
-   X.mail(me.email,'SMC by Stephen — code d’effacement','Ton code de confirmation : '+c+' (valable 10 minutes). Si tu n’as rien demandé, ignore ce message.');return ok({sent:true,test:X.test?c:undefined});},
+   mail(me.email,'SMC by Stephen — code d’effacement','Ton code de confirmation : '+c+' (valable 10 minutes). Si tu n’as rien demandé, ignore ce message.');return ok({sent:true,test:X.test?c:undefined});},
   eraseConfirm:function(r,me){var s=db.all('sess').filter(function(x){return x.email===me.email&&String(x.erase)===String(r.code)&&x.exp>X.now()})[0];if(!s)return no('Code incorrect ou expiré.');
    db.save('sess',db.all('sess').filter(function(x){return !x.erase||x.email!==me.email}));db.save('shots',db.all('shots').filter(function(x){if(x.email===me.email){if(X.delImg)X.delImg(x.img);return false}return true}));me.done={};save(me);log(me.email,'effacement des données confirmé par code',me.email);return ok(true);},
   lesson:function(r,me){var l=X.lesson&&X.lesson(r.id);if(!l)return no('Contenu indisponible.');
-   if(me.role==='student'&&!(me.status==='active'&&me.blk.indexOf(l.id)<0&&(me.lv.indexOf(l.lv)>=0||me.open.indexOf(l.id)>=0)))return no('Accès non ouvert pour cette leçon.');return ok(l);},
+   if(me.role==='student'&&!(me.status==='active'&&(!me.until||me.until>X.now())&&me.blk.indexOf(l.id)<0&&(me.lv.indexOf(l.lv)>=0||me.open.indexOf(l.id)>=0)))return no('Accès non ouvert pour cette leçon.');return ok(l);},
   levelFam:function(r,me){if(ALLLV.indexOf(r.lv)<0||!X.byLevel)return no('Contenu indisponible.');
    if(me.role==='student'&&!(me.status==='active'&&(r.lv==='BG'||me.lv.indexOf(r.lv)>=0)))return no('Test non accessible.');
    return ok(X.byLevel(r.lv).map(function(l){return{id:l.id,fam:l.fam,why:l.why}}));},
-  pwdChange:function(r,me){if(!r.pwd||r.pwd===me.pwd)return no('Choisis un nouveau mot de passe différent.');if(me.pwd!==r.old)return no('Ancien mot de passe incorrect.');me.pwd=r.pwd;me.tmp=0;save(me);log(me.email,'mot de passe modifié',me.email);return ok({user:pub(me)});},
-  pwdReset:function(r,me){if(me.role!=='admin')return no('Réservé à l’administrateur.');var u=find(r.email);if(!u)return no('Introuvable.');u.pwd=r.pwd;u.tmp=1;save(u);log(me.email,'mot de passe provisoire attribué',u.email);return ok(true);},
-  log:function(r,me){if(me.role!=='admin')return no('Réservé.');return ok(db.all('log').slice(-300).reverse())}
+  /* ---- console admin (clé admin) ---- */
+  adminAll:function(r,me){return ok({users:users().map(pub),pays:db.all('pay'),exp:db.all('exp'),cohorts:db.all('cohorts'),att:db.all('att'),log:db.all('log').slice(-300).reverse(),mails:db.all('mails').slice(-200).reverse(),cfg:cfg(),site:site()})},
+  userApprove:function(r){var u=find(r.email);if(!u)return no('Introuvable.');var g=grant(u,r);log('admin','demande validée, accès envoyé',u.email,u.role+' · mail '+g.mail);return ok(g)},
+  userRefuse:function(r){var u=find(r.email);if(!u)return no('Introuvable.');u.status='refused';save(u);if(r.notify)mail(u.email,'SMC by Stephen — ta demande','Bonjour,\n\nNous ne pouvons pas donner suite à ta demande pour le moment. Tu peux nous écrire pour en savoir plus.\n\nSMC by Stephen');log('admin','demande refusée',u.email);return ok(true)},
+  userSet:function(r){var u=find(r.email);if(!u)return no('Introuvable.');['status','role','lv','open','blk','coach','cohort','name','total','until','device','note','tel'].forEach(function(k){if(r.patch&&r.patch[k]!==undefined)u[k]=r.patch[k]});if(u.role==='coach'&&!u.code)u.code=rid(6);save(u);log('admin','modification utilisateur',u.email,JSON.stringify(r.patch));return ok({user:pub(u)})},
+  userCreate:function(r){var e=norm(r.email);if(!e||!r.name)return no('Nom et email requis.');if(find(e))return no('Email déjà utilisé.');var u=newUser({email:e,name:r.name,role:r.role==='coach'?'coach':'student',tel:r.tel,total:r.total});save(u);var g=grant(u,{role:u.role,total:r.total,lv:u.role==='coach'?ALLLV:['BG']});log('admin','compte créé',e,u.role);return ok(g)},
+  pwdReset:function(r){var u=find(r.email);if(!u)return no('Introuvable.');var g=grant(u,{});log('admin','nouvel accès envoyé',u.email);return ok(g)},
+  payAdd:function(r){var u=find(r.email);if(!u)return no('Élève introuvable.');var amt=Number(r.amount);if(!(amt>0))return no('Montant invalide.');
+   var a=db.all('pay'),d=new Date(X.now()),ym=d.getFullYear()+('0'+(d.getMonth()+1)).slice(-2),n=a.filter(function(p){return String(p.id).indexOf('R-'+ym)===0}).length+1;
+   var p={id:'R-'+ym+'-'+('000'+n).slice(-4),email:u.email,name:u.name,amount:amt,method:r.method||'Espèces',ref:r.ref||'',lv:arr(r.lv),t:X.now(),by:'admin'};a.push(p);db.save('pay',a);
+   arr(r.lv).forEach(function(l){if(u.lv.indexOf(l)<0)u.lv.push(l)});save(u);log('admin','paiement enregistré',u.email,p.id+' · '+amt+' Ar · '+p.method);return ok({pay:p})},
+  cfgSet:function(r){var o=cfg(),rows=[];for(var k in r.v)o[k]=r.v[k];for(var j in o)rows.push({k:j,v:o[j]});db.save('cfg',rows);log('admin','réglages modifiés','',Object.keys(r.v).join(','));return ok(o)},
+  cohortSave:function(r){var a=db.all('cohorts'),id=r.id||('P'+(a.length+1));a=a.filter(function(c){return c.id!==id});a.push({id:id,name:r.name,start:r.start||'',lv:r.lv||'BG'});db.save('cohorts',a);log('admin','promotion enregistrée',id,r.name);return ok(a)},
+  expAdd:function(r){var a=db.all('exp'),amt=Number(r.amount);if(!(amt>0)||!r.label)return no('Libellé et montant requis.');a.push({id:'D'+(a.length+1)+rid(3),t:X.now(),label:r.label,amount:amt,cat:r.cat||'Autre'});db.save('exp',a);log('admin','dépense enregistrée','',r.label+' · '+amt);return ok(a)},
+  expDel:function(r){db.save('exp',db.all('exp').filter(function(x){return x.id!==r.id}));return ok(true)},
+  mailBatch:function(r){var out=[];arr(r.items).slice(0,60).forEach(function(i){out.push({to:i.to,s:mail(i.to,i.subject,i.body)})});log('admin','e-mails envoyés','',out.length+' · '+(r.tag||''));return ok(out)}
  };
+ var ADM={adminAll:1,userApprove:1,userRefuse:1,userSet:1,userCreate:1,pwdReset:1,payAdd:1,cfgSet:1,cohortSave:1,expAdd:1,expDel:1,mailBatch:1};
+ var PUB={register:1,login:1,cfgGet:1};
  return function(r){
-  try{var pubA={register:1,login:1,cfgGet:1};var me=pubA[r.action]?null:sessOf(r.token);
-   if(!pubA[r.action]&&!me)return no('Session expirée : reconnecte-toi.');
-   if(me&&me.status==='blocked')return no('Accès bloqué.');
+  try{var me=null;
+   if(ADM[r.action]){if(!X.adminKey||!r.akey||r.akey!==X.adminKey())return no('Clé admin incorrecte.');me={email:'admin',role:'admin',status:'active'}}
+   else if(r.action==='pays'&&r.akey&&X.adminKey&&r.akey===X.adminKey())me={email:'admin',role:'admin',status:'active'}
+   else if(r.action==='cohorts'&&r.akey&&X.adminKey&&r.akey===X.adminKey())me={email:'admin',role:'admin',status:'active'}
+   else if(!PUB[r.action]){me=sessOf(r.token);if(!me)return no('Session expirée : reconnecte-toi.');if(me.status!=='active')return no('Accès coupé.')}
    if(!A[r.action])return no('Action inconnue.');return A[r.action](r,me);}catch(e){return no('Erreur : '+e.message)}
  };
 }
@@ -476,17 +508,17 @@ const LSg=(k,d)=>{try{const v=localStorage.getItem(k);return v==null?d:JSON.pars
 const LVN={BG:'Beginner',IM:'Intermediate',AD:'Advanced',MG:'Management',OUT:'Boîte à outils'},LVS=Object.keys(LVN);
 const fmt=t=>new Date(t).toLocaleString('fr-FR',{dateStyle:'short',timeStyle:'short'}),ar=n=>Number(n).toLocaleString('fr-FR')+' Ar';
 /* ---- hash ---- */
-async function hash(s){try{const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode('smc|'+s));return[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('')}catch(e){let h1=0xdeadbeef,h2=0x41c6ce57;for(let i=0;i<s.length;i++){const c=s.charCodeAt(i);h1=Math.imul(h1^c,2654435761);h2=Math.imul(h2^c,1597334677)}return'f'+(h1>>>0).toString(16)+(h2>>>0).toString(16)}}
+const hash=async s=>SMCSHA('smc|'+s);
 /* ---- backend : local ou Apps Script ---- */
 const LDB={all:t=>LSg('smc_pf_'+t,[]),save:(t,r)=>LSs('smc_pf_'+t,r)};
-const LX={now:()=>Date.now(),test:true,firstAdmin:true,mail:()=>{}};
+const LX={now:()=>Date.now(),test:true,mail:()=>{},adminKey:()=>'local'};
 const core=SMCCORE(LDB,LX);
 async function api(action,data){
  const req=Object.assign({action,token:(LSg('smc_sess',{})||{}).token},data||{});
  if(!PF_URL)return core(JSON.parse(JSON.stringify(req)));
  try{const r=await fetch(PF_URL,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify(req)});return await r.json()}catch(e){return{ok:false,err:'Connexion impossible. Vérifie ta connexion internet.'}}}
 /* ---- session ---- */
-let U=(LSg('smc_sess',{})||{}).user||null;
+let U=(LSg('smc_sess',{})||{}).user||null;let DEV=LSg('smc_dev','');if(!DEV){DEV=Math.random().toString(36).slice(2)+Date.now().toString(36);LSs('smc_dev',DEV)}
 function setSess(tok,u){U=u;LSs('smc_sess',{token:tok,user:u});try{localStorage.setItem('smc_role',u.role==='student'?'eleve':'coach');localStorage.setItem('smc_name',u.name)}catch(e){}
  const r=$('#role'),w=$('#who');if(r)r.value=u.role==='student'?'eleve':'coach';if(w)w.value=u.name;
  const h=$('.top .row');if(h)h.style.display='none';
@@ -495,27 +527,27 @@ function logout(){try{localStorage.removeItem('smc_sess')}catch(e){}U=null;const
 const m=()=>$('#m');
 /* ---- barre ---- */
 function bar(act){let b=$('#pfbar');if(!b){b=document.createElement('nav');b.id='pfbar';m().before(b)}
- const it=[['cours','📚 Cours'],U.role==='student'?['espace','🧑‍🎓 Mon espace']:null,U.role!=='student'?['coach','🎙 Mes élèves']:null,U.role==='admin'?['admin','⚙️ Administration']:null,['outils','🧰 Outils'],['legal','⚖️ Règles & risques']].filter(Boolean);
- b.innerHTML=`<span class="who">${SMC.LOGO?SMC.LOGO(18):''} <b>${esc(U.name)}</b><small>${U.role==='admin'?'Administrateur':U.role==='coach'?'Formateur':'Élève'}</small></span>`+it.map(x=>`<button class="${act===x[0]?'on':'g'}" data-v="${x[0]}">${x[1]}</button>`).join('')+`<button class="g" data-v="out">Quitter</button>`;
+ const it=[['cours','📚 Cours'],U.role==='student'?['espace','🧑‍🎓 Mon espace']:null,U.role!=='student'?['coach','🎙 Mes élèves']:null,['outils','🧰 Outils'],['legal','⚖️ Règles & risques']].filter(Boolean);
+ b.innerHTML=`<span class="who">${SMC.LOGO?SMC.LOGO(18):''} <b>${esc(U.name)}</b><small>${U.role==='coach'?'Formateur':'Élève'}</small></span>`+it.map(x=>`<button class="${act===x[0]?'on':'g'}" data-v="${x[0]}">${x[1]}</button>`).join('')+`<button class="g" data-v="out">Quitter</button>`;
  b.onclick=e=>{const v=e.target.closest('button')?.dataset.v;if(!v)return;if(v==='out')logout();else PF.view(v)}}
 /* ---- auth ---- */
 function authView(mode){
  const code=new URLSearchParams(location.search).get('c')||LSg('smc_coachcode','');if(code)LSs('smc_coachcode',code);
  const reg=mode==='reg';
- m().innerHTML=`<div class="auth"><div class="logo">${SMC.BRAND?SMC.BRAND(54):''}</div><h2>${reg?'Demander mon accès':'Connexion'}</h2><p class="sub">${reg?'Ta demande est examinée par le formateur. Tu recevras l’accès dès sa validation.':'Content de te revoir.'}</p>
- <form id="af">${reg?'<label>Nom complet<input name="name" required autocomplete="name"></label>':''}<label>Email<input name="email" type="email" required autocomplete="email"></label><label>${reg?'Crée un mot de passe pour SMC':'Mot de passe SMC'}<small>Un mot de passe propre à cette plateforme. N’utilise <b>jamais</b> ton mot de passe Google.</small><input name="pwd" type="password" required minlength="6" autocomplete="${reg?'new-password':'current-password'}"></label>
- ${reg?`<label>Code de ton formateur (facultatif)<input name="coach" value="${esc(code)}" placeholder="ex. k3x9ab"></label><label class="ck"><input type="checkbox" required> J’ai lu et j’accepte les <a href="#" data-l="1">conditions, la politique de remboursement et l’avertissement sur les risques</a>.</label>`:''}
+ m().innerHTML=`<div class="auth"><div class="logo">${SMC.BRAND?SMC.BRAND(54):''}</div><h2>${reg?'Demander mon accès':'Se connecter'}</h2><p class="sub">${reg?'Remplis ce formulaire. Ta demande est examinée par le formateur : si elle est validée, tu reçois ton accès par email. Aucun mot de passe à créer maintenant.':'Utilise l’email et le mot de passe reçus par email.'}</p>
+ <form id="af">${reg?`<label>Nom complet<input name="name" required autocomplete="name"></label><label>Email<input name="email" type="email" required autocomplete="email"></label><label>Téléphone / WhatsApp<input name="tel" type="tel" required autocomplete="tel"></label><label>Activité actuelle (étudiant, salarié…)<input name="act"></label><label>Âge<input name="age" type="number" min="18" max="99" required></label><label>Je demande l’accès en tant que<select name="want"><option value="student">Élève (je suis la formation)</option><option value="coach">Formateur</option></select></label><label>Code de ton formateur (facultatif)<input name="coach" value="${esc(code)}" placeholder="ex. k3x9ab"></label><label class="ck"><input type="checkbox" required> J’ai lu et j’accepte les <a href="#" data-l="1">conditions, la politique de remboursement et l’avertissement sur les risques</a>.</label>`:`<label>Email<input name="email" type="email" required autocomplete="email"></label><label>Mot de passe reçu par email<input name="pwd" type="password" required autocomplete="current-password"></label>`}
  <div id="ae" class="err"></div><button class="pri">${reg?'Envoyer ma demande':'Se connecter'}</button></form>
- <p class="sub"><a href="#" id="sw">${reg?'J’ai déjà un compte':'Pas encore de compte ? Demander l’accès'}</a></p></div>`;
+ <p class="sub"><a href="#" id="sw">${reg?'J’ai déjà un accès':'Pas encore d’accès ? Faire une demande'}</a></p></div>`;
  $('#sw').onclick=e=>{e.preventDefault();authView(reg?'login':'reg')};
  const lk=$('[data-l]');if(lk)lk.onclick=e=>{e.preventDefault();legalModal()};
- $('#af').onsubmit=async e=>{e.preventDefault();const f=Object.fromEntries(new FormData(e.target));f.pwd=await hash(f.email.toLowerCase().trim()+':'+f.pwd);
-  const r=await api(reg?'register':'login',f);if(!r.ok){$('#ae').textContent=r.err;return}
-  if(reg){const l=await api('login',{email:f.email,pwd:f.pwd});if(l.ok){LSs('smc_sess',{token:l.data.token,user:l.data.user});setSess(l.data.token,l.data.user)}else{authView('login');return}}
-  else setSess(r.data.token,r.data.user);if(PF.gate()){SMC.home();if(U.tmp)forceChange(f.pwd)}}}
+ $('#af').onsubmit=async e=>{e.preventDefault();const f=Object.fromEntries(new FormData(e.target)),btn=$('.pri');btn.disabled=true;
+  if(reg){const r=await api('register',f);btn.disabled=false;if(!r.ok){$('#ae').textContent=r.err;return}
+   m().innerHTML=`<div class="auth"><div class="logo">${SMC.BRAND?SMC.BRAND(54):''}</div><h2>Demande envoyée ✅</h2><p>Merci ${esc(f.name.split(' ')[0])}. Ton formateur examine ta demande. Si elle est validée, tu recevras ton accès par email à <b>${esc(f.email)}</b> (pense à regarder les spams).</p><button class="g" id="bk">Retour</button></div>`;$('#bk').onclick=()=>authView('login');return}
+  f.pwd=await hash(f.email.toLowerCase().trim()+':'+f.pwd);f.device=DEV;const r=await api('login',f);btn.disabled=false;if(!r.ok){$('#ae').textContent=r.err;return}
+  setSess(r.data.token,r.data.user);if(PF.gate()){SMC.home();if(U.tmp)forceChange(f.pwd)}}}
 function forceChange(old){const d=modal(`<h3>Choisis ton mot de passe</h3><p>Tu as un mot de passe provisoire. Choisis le tien (6 caractères minimum, propre à SMC).</p><input id="n1" type="password" placeholder="Nouveau mot de passe"><div class="row"><button id="n2">Enregistrer</button></div><div id="n3" class="err"></div>`);d.querySelector('.x').remove();d.onclick=null;
  $('#n2',d).onclick=async()=>{const v=$('#n1',d).value;if(v.length<6)return $('#n3',d).textContent='6 caractères minimum.';const r=await api('pwdChange',{old,pwd:await hash(U.email+':'+v)});if(!r.ok)return $('#n3',d).textContent=r.err;setSess(LSg('smc_sess',{}).token,r.data.user);d.remove()}}
-function pendingView(){m().innerHTML=`<div class="auth"><div class="logo">${SMC.BRAND?SMC.BRAND(54):''}</div><h2>Demande envoyée ✅</h2><p>Bonjour <b>${esc(U.name)}</b>, ta demande d’accès est en cours de validation par le formateur. Reviens plus tard ou actualise.</p><div class="row"><button id="rf">↻ Actualiser</button><button class="g" id="lo">Quitter</button></div></div>`;$('#rf').onclick=refresh;$('#lo').onclick=logout}
+function pendingView(){authView('login');return;m().innerHTML=`<div class="auth"><div class="logo">${SMC.BRAND?SMC.BRAND(54):''}</div><h2>Demande envoyée ✅</h2><p>Bonjour <b>${esc(U.name)}</b>, ta demande d’accès est en cours de validation par le formateur. Reviens plus tard ou actualise.</p><div class="row"><button id="rf">↻ Actualiser</button><button class="g" id="lo">Quitter</button></div></div>`;$('#rf').onclick=refresh;$('#lo').onclick=logout}
 function blockedView(){m().innerHTML=`<div class="auth"><h2>Accès bloqué</h2><p>Ton accès est suspendu. Contacte ton formateur.</p><button class="g" id="lo">Quitter</button></div>`;$('#lo').onclick=logout}
 async function refresh(){const r=await api('me');if(r.ok){const t=LSg('smc_sess',{}).token,ch=r.data.user.status!==U.status;setSess(t,r.data.user);if(ch){if(PF.gate())SMC.home()}else if(U.status==='pending')pendingView()}else if(/Session/.test(r.err||'')){logout()}}
 /* ---- modals / helpers ---- */
@@ -559,44 +591,6 @@ V.outils=()=>{
  $('#er').onclick=async()=>{const r=await api('eraseCode');if(!r.ok)return alert(r.err);const d=modal(`<h3>Confirmer l’effacement</h3><p>Un code à 6 chiffres a été envoyé à <b>${esc(U.email)}</b>.${r.data.test?`<br><small>(Mode test : code = <b>${r.data.test}</b>)</small>`:''}</p><input id="ec" placeholder="Code"><div class="row"><button id="eo">Effacer définitivement</button></div><div id="ee" class="err"></div>`);
   $('#eo',d).onclick=async()=>{const q=await api('eraseConfirm',{code:$('#ec',d).value.trim()});if(!q.ok){$('#ee',d).textContent=q.err;return}['smc_journal','smc_done','smc_used'].forEach(k=>{try{localStorage.removeItem(k)}catch(e){}});for(const k in SMC.DONE)delete SMC.DONE[k];d.remove();alert('Données effacées.');PF.view('cours')}}};
 function shrink(file){return new Promise(res=>{const im=new Image();im.onload=()=>{const k=Math.min(1,1100/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=im.width*k;c.height=im.height*k;c.getContext('2d').drawImage(im,0,0,c.width,c.height);res(c.toDataURL('image/jpeg',.6))};im.src=URL.createObjectURL(file)})}
-/* ---- administration ---- */
-let AT='users';
-V.admin=async()=>{
- const tabs=[['users','Élèves'],['pay','Paiements'],['tarifs','Tarifs'],['coh','Promotions & présences'],['team','Équipe'],['log','Journal d’actions']];
- m().innerHTML=`<div class="pg"><h2>Administration</h2><div class="tabs">${tabs.map(t=>`<button class="${AT===t[0]?'on':'g'}" data-t="${t[0]}">${t[1]}</button>`).join('')}</div><div id="ab"></div></div>`;
- m().onclick=e=>{const t=e.target.dataset.t;if(t){AT=t;V.admin()}};
- const b=$('#ab'),ur=await api('users'),us=ur.ok?ur.data:[],stu=us.filter(u=>u.role==='student'),coaches=us.filter(u=>u.role!=='student');
- if(AT==='users'){b.innerHTML=`<div class="card"><table class="tb"><tr><th>Élève</th><th>Statut</th><th>Niveaux</th><th>Coach</th><th>Fait</th><th></th></tr>${stu.map(u=>`<tr><td>${esc(u.name)}<br><small>${esc(u.email)}</small></td><td>${st(u.status)}</td><td>${u.lv.join(' ')}</td><td>${esc((coaches.find(c=>c.email===u.coach)||{}).name||'—')}</td><td>${Object.keys(u.done||{}).filter(k=>!/^EX_/.test(k)).length}</td><td class="act">${u.status!=='active'?`<button data-ok="${u.email}">Valider</button>`:''}${u.status!=='blocked'?`<button class="g" data-bl="${u.email}">Bloquer</button>`:`<button class="g" data-ok="${u.email}">Débloquer</button>`}<button class="g" data-ed="${u.email}">Gérer</button></td></tr>`).join('')||'<tr><td colspan=6><small>Aucun élève.</small></td></tr>'}</table></div>`;
-  b.onclick=async e=>{const d=e.target.dataset;if(d.ok){await api('userSet',{email:d.ok,patch:{status:'active'}});V.admin()}else if(d.bl){if(confirm('Bloquer cet accès ?')){await api('userSet',{email:d.bl,patch:{status:'blocked'}});V.admin()}}else if(d.ed)editUser(stu.find(u=>u.email===d.ed),coaches)}}
- if(AT==='pay'){const pr=await api('pays'),ps=(pr.ok?pr.data:[]).sort((a,b)=>b.t-a.t),cf=(await api('cfgGet')).data||{};
-  b.innerHTML=`<div class="card"><b>Enregistrer un paiement</b><div class="grid"><label>Élève<select id="p1">${stu.map(u=>`<option value="${u.email}">${esc(u.name)}</option>`).join('')}</select></label><label>Montant (Ar)<input id="p2" type="number"></label><label>Mode<select id="p3"><option>MVola</option><option>Orange Money</option><option>Airtel Money</option><option>Espèces</option></select></label><label>Référence<input id="p4"></label></div><div class="chips">Niveaux débloqués : ${LVS.map(l=>`<label class="ck"><input type="checkbox" value="${l}" class="pl"> ${LVN[l]}${cf['t_'+l]?' ('+ar(cf['t_'+l])+')':''}</label>`).join('')}</div><button id="pa">Enregistrer + reçu</button><div id="pe" class="err"></div></div>
-  <div class="card"><table class="tb"><tr><th>N°</th><th>Date</th><th>Élève</th><th>Montant</th><th>Mode</th><th></th></tr>${ps.map(p=>`<tr><td>${p.id}</td><td>${fmt(p.t)}</td><td>${esc(p.name)}</td><td>${ar(p.amount)}</td><td>${esc(p.method)}</td><td><button class="g" data-r="${p.id}">Reçu</button></td></tr>`).join('')}</table><small>Total encaissé : <b>${ar(ps.reduce((a,p)=>a+p.amount,0))}</b></small></div>`;
-  $('#pa').onclick=async()=>{const r=await api('payAdd',{email:$('#p1').value,amount:$('#p2').value,method:$('#p3').value,ref:$('#p4').value,lv:[...document.querySelectorAll('.pl:checked')].map(x=>x.value)});if(!r.ok)return $('#pe').textContent=r.err;receipt(r.data.pay);V.admin()};
-  b.onclick=e=>{const id=e.target.dataset.r;if(id)receipt(ps.find(p=>p.id===id))}}
- if(AT==='tarifs'){const cf=(await api('cfgGet')).data||{};b.innerHTML=`<div class="card"><b>Tarifs par niveau (Ariary)</b><div class="grid">${LVS.map(l=>`<label>${LVN[l]}<input data-t="t_${l}" type="number" value="${cf['t_'+l]||''}"></label>`).join('')}</div><button id="ts">Enregistrer</button> <span id="tm"></span></div>`;
-  $('#ts').onclick=async()=>{const v={};document.querySelectorAll('[data-t^=t_]').forEach(i=>v[i.dataset.t]=i.value);const r=await api('cfgSet',{v});$('#tm').textContent=r.ok?'Enregistré ✓':r.err}}
- if(AT==='coh'){const cr=await api('cohorts'),cs=cr.ok?cr.data:[];
-  b.innerHTML=`<div class="card"><b>Nouvelle promotion</b><div class="grid"><label>Nom<input id="h1" placeholder="Promotion 1"></label><label>Début<input id="h2" type="date"></label></div><button id="hs">Créer</button></div>
-  <div class="card"><b>Présences</b><div class="grid"><label>Promotion<select id="a1">${cs.map(c=>`<option value="${c.id}">${esc(c.name)}</option>`).join('')}</select></label><label>Date<input id="a2" type="date" value="${new Date().toISOString().slice(0,10)}"></label></div><div id="al"></div><button id="as">Enregistrer les présences</button> <span id="am"></span></div>`;
-  $('#hs').onclick=async()=>{if($('#h1').value){await api('cohortSave',{name:$('#h1').value,start:$('#h2').value});V.admin()}};
-  const lst=async()=>{const c=$('#a1').value,mem=stu.filter(u=>u.cohort===c),at=(await api('attends',{cohort:c})).data||[],cur=at.find(x=>x.date===$('#a2').value);$('#al').innerHTML=mem.length?mem.map(u=>`<label class="ck"><input type="checkbox" class="pr" value="${u.email}" ${cur&&cur.present.indexOf(u.email)>=0?'checked':''}> ${esc(u.name)}</label>`).join(''):'<small>Aucun élève dans cette promotion (affecte-les depuis « Élèves › Gérer »).</small>'};
-  if(cs.length){$('#a1').onchange=lst;$('#a2').onchange=lst;lst()}
-  $('#as').onclick=async()=>{const r=await api('attendSave',{cohort:$('#a1').value,date:$('#a2').value,present:[...document.querySelectorAll('.pr:checked')].map(x=>x.value)});$('#am').textContent=r.ok?'Enregistré ✓':r.err}}
- if(AT==='team'){b.innerHTML=`<div class="card"><b>Créer un compte formateur</b><div class="grid"><label>Nom<input id="t1"></label><label>Email<input id="t2" type="email"></label><label>Mot de passe provisoire<input id="t3"></label></div><button id="tc">Créer</button><div id="te" class="err"></div></div><div class="card"><b>Formateurs</b><table class="tb">${coaches.map(c=>`<tr><td>${esc(c.name)}<br><small>${esc(c.email)}</small></td><td>${c.role}</td><td>code <code>${c.code||''}</code></td></tr>`).join('')}</table></div>`;
-  $('#tc').onclick=async()=>{const e=$('#t2').value;const r=await api('userCreate',{name:$('#t1').value,email:e,pwd:await hash(e.toLowerCase().trim()+':'+$('#t3').value),role:'coach'});if(!r.ok)return $('#te').textContent=r.err;V.admin()}}
- if(AT==='log'){const r=await api('log');b.innerHTML=`<div class="card"><table class="tb"><tr><th>Date</th><th>Par</th><th>Action</th><th>Cible</th><th>Détail</th></tr>${(r.data||[]).map(x=>`<tr><td>${fmt(x.t)}</td><td>${esc(x.by)}</td><td>${esc(x.act)}</td><td>${esc(x.target)}</td><td><small>${esc(x.info)}</small></td></tr>`).join('')}</table></div>`}
-};
-async function editUser(u,coaches){
- const cr=(await api('cohorts')).data||[],ls=SMC.lessons();
- const d=modal(`<h3>${esc(u.name)}</h3><small>${esc(u.email)}</small><p><b>Niveaux ouverts</b></p><div class="chips">${LVS.map(l=>`<label class="ck"><input type="checkbox" class="el" value="${l}" ${u.lv.indexOf(l)>=0?'checked':''}> ${LVN[l]}</label>`).join('')}</div>
- <div class="grid"><label>Coach<select id="e1"><option value="">—</option>${coaches.map(c=>`<option value="${c.email}" ${u.coach===c.email?'selected':''}>${esc(c.name)}</option>`).join('')}</select></label><label>Promotion<select id="e2"><option value="">—</option>${cr.map(c=>`<option value="${c.id}" ${u.cohort===c.id?'selected':''}>${esc(c.name)}</option>`).join('')}</select></label></div>
- <p><b>Leçon précise</b> (ouvrir ou bloquer individuellement)</p><div class="grid"><select id="e3">${ls.map(l=>`<option value="${l.id}">${l.id} · ${esc(l.t)}</option>`).join('')}</select><span><button class="g" id="eo">Ouvrir</button> <button class="g" id="eb">Bloquer</button> <button class="g" id="er">Normal</button></span></div><small>Ouvertes : ${u.open.join(', ')||'—'} · Bloquées : ${u.blk.join(', ')||'—'}</small>
- <div class="row"><button id="es">Enregistrer</button></div>`);
- const set=async p=>{await api('userSet',{email:u.email,patch:p});d.remove();V.admin()},sel=()=>$('#e3',d).value;
- $('#eo',d).onclick=()=>set({open:[...new Set([...u.open,sel()])],blk:u.blk.filter(x=>x!==sel())});
- $('#eb',d).onclick=()=>set({blk:[...new Set([...u.blk,sel()])],open:u.open.filter(x=>x!==sel())});
- $('#er',d).onclick=()=>set({blk:u.blk.filter(x=>x!==sel()),open:u.open.filter(x=>x!==sel())});
- $('#es',d).onclick=()=>set({lv:[...d.querySelectorAll('.el:checked')].map(x=>x.value),coach:$('#e1',d).value,cohort:$('#e2',d).value})}
 /* ---- API publique pour le moteur de cours ---- */
 let lastSync=0;
 const PF=window.PF={
@@ -606,7 +600,7 @@ const PF=window.PF={
   if(U.status==='pending'){bar('');pendingView();return false}
   if(U.status==='blocked'){blockedView();return false}
   bar(CUR);return true},
- canOpen(l){if(!U)return false;if(U.role!=='student')return true;if(U.status!=='active')return false;if(U.blk.indexOf(l.id)>=0)return false;return U.lv.indexOf(l.lv)>=0||U.open.indexOf(l.id)>=0},
+ canOpen(l){if(!U)return false;if(U.role!=='student')return true;if(U.status!=='active'||(U.until&&U.until<Date.now()))return false;if(U.blk.indexOf(l.id)>=0)return false;return U.lv.indexOf(l.lv)>=0||U.open.indexOf(l.id)>=0},
  view(v){if(!V[v])return;CUR=v;if(!U)return PF.gate();bar(v);V[v]()},
  async load(l){if(l.slides)return;const r=await api('lesson',{id:l.id});if(!r.ok)throw new Error(r.err);const raw=window.SMC_L.find(x=>x.id===l.id);Object.assign(raw,r.data);Object.assign(l,r.data,{fam:r.data.fam.map((v,i)=>({w:(r.data.why||[])[i]||'',v}))})},
  async loadLevel(lv){const L=window.SMC_L.filter(x=>x.lv===lv);if(L.every(x=>x.fam&&x.fam.length))return;const r=await api('levelFam',{lv});if(!r.ok)throw new Error(r.err);r.data.forEach(d=>{const l=L.find(x=>x.id===d.id);if(l){const raw=l;raw.fam=d.fam;raw.why=d.why}})},
