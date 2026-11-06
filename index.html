@@ -451,7 +451,6 @@ function SMCCORE(db,X){
    var u=newUser({email:e,first:fi,last:la,name:fi+' '+la,payref:r.payref,paymeth:r.paymeth,tester:tester,test:tester,tel:r.tel,act:r.act,age:r.age,want:r.want==='coach'?'coach':'student',coach:(co&&r.want!=='coach')?co.email:'',cur:r.cur,src:co?(r.via==='link'?'lien formateur':'code formateur'):'direct'});save(u);
    log(e,'demande d’accès',e,(tester?'DÉVELOPPEUR · ':'')+(u.want==='coach'?'formateur':'élève')+(co?' · via '+(r.via==='link'?'le lien de ':'le code de ')+co.name:''));
    var n=cfg().notify;if(n)mail(n,'SMC — nouvelle demande d’accès','Nouvelle demande'+(tester?' (DÉVELOPPEUR)':'')+' : '+u.name+(u.payref?' · réf. paiement '+u.payref:'')+' ('+e+', '+u.tel+')'+(co?' via le formateur '+co.name:'')+'.\nOuvre la console admin pour valider.');
-   if(tester&&!wc){var g=grant(u,{role:'student',lv:['BG']});log('admin','accès automatique (développeur Stephen)',e,'mail '+g.mail);return ok({sent:true,auto:true})}
    return ok({sent:true});},
   login:function(r){
    var u=find(r.email);if(!u||!u.pwd||u.pwd!==r.pwd)return no('Email ou mot de passe incorrect. Si ta demande n’est pas encore validée, attends l’email d’accès.');
