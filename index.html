@@ -1,0 +1,616 @@
+<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#0b111b"><link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="SMC by Stephen">
+<title>SMC by Stephen · programme</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Sora:wght@600;700&display=swap" rel="stylesheet">
+<style>:root{--bg:#0B1220;--pn:#111C33;--pn2:#17274A;--ln:#25365A;--fg:#EAF1FF;--mu:#8FA3C8;--up:#2EBD85;--dn:#F6465D;--bl:#4C9AFF;--gd:#F0B90B;--vi:#9B8CFF;--ink:#06101F;--fd:'Sora',system-ui,sans-serif;--fb:'DM Sans',system-ui,sans-serif}
+*{box-sizing:border-box}html,body{margin:0}
+body{background:var(--bg);color:var(--fg);font:16px/1.55 var(--fb);background-image:linear-gradient(rgba(76,154,255,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(76,154,255,.05) 1px,transparent 1px);background-size:44px 44px}
+h1,h2,h3{font-family:var(--fd);margin:0}
+button{font:600 14px var(--fb);cursor:pointer;border:0;border-radius:10px;padding:10px 16px;background:var(--gd);color:var(--ink)}
+button.g{background:var(--pn2);color:var(--fg);border:1px solid var(--ln)}button.up{background:var(--up);color:#03170F}
+input,select{background:var(--pn);border:1px solid var(--ln);color:var(--fg);padding:9px 12px;border-radius:10px;font:inherit}
+/* accueil */
+header.top{max-width:1000px;margin:auto;padding:26px 20px 6px}header.top h1{font-size:28px}header.top h1 b{color:var(--gd)}
+.sub{color:var(--mu);margin:4px 0 12px}.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+main{max-width:1000px;margin:auto;padding:6px 20px 70px;display:grid;gap:10px}
+.lv{margin-top:16px;font:700 12px var(--fd);letter-spacing:.12em;text-transform:uppercase;color:var(--gd)}
+.lec{display:flex;gap:12px;align-items:center;background:var(--pn);border:1px solid var(--ln);border-radius:14px;padding:12px 14px;flex-wrap:wrap}
+.lec .n{width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,#1E3A6E,#17274A);display:grid;place-items:center;font:700 14px var(--fd);color:var(--gd)}
+.lec .t{flex:1;min-width:220px}.lec small{display:block;color:var(--mu)}.lec.off{opacity:.5}.lec.ok .n{background:var(--up);color:#03170F}
+.bar{height:7px;background:var(--pn2);border-radius:9px;overflow:hidden}.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--bl),var(--up));transition:width .4s}
+.exam{border:1px solid var(--gd);background:linear-gradient(135deg,rgba(240,185,11,.10),transparent)}
+.risk{border-left:4px solid var(--dn);background:rgba(246,70,93,.07);padding:8px 14px;border-radius:0 10px 10px 0;color:var(--mu);font-size:13px}
+/* diaporama */
+.dk{position:fixed;inset:0;z-index:50;display:flex;flex-direction:column;background:radial-gradient(1100px 600px at 85% -10%,#173764 0,var(--bg) 62%)}
+.dk::before{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(76,154,255,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(76,154,255,.06) 1px,transparent 1px);background-size:48px 48px;pointer-events:none}
+.dk-prog{height:4px;background:var(--pn2);position:relative;z-index:2}.dk-prog i{display:block;height:100%;background:linear-gradient(90deg,var(--bl),var(--up),var(--gd));transition:width .35s}
+.dk-st{flex:1;overflow:auto;padding:3vh 5vw;display:flex;position:relative}
+.dk-v{margin:auto;width:min(1280px,100%);animation:in .5s cubic-bezier(.2,.8,.2,1);position:relative;z-index:2}
+.eye{color:var(--gd);font:700 12px var(--fd);letter-spacing:.16em;text-transform:uppercase;margin-bottom:.6em}
+.dk-v h2{font-size:clamp(24px,3.6vw,40px);line-height:1.15;margin-bottom:.55em}
+.dl{display:grid;grid-template-columns:1.7fr .8fr;gap:22px;align-items:center}
+.dia{background:rgba(10,20,39,.75);border:1px solid var(--ln);border-radius:18px;padding:10px}.svg{width:100%;height:auto;display:block}
+.side ul,.dk-v ul{padding:0;margin:0;list-style:none}
+.side li,.dk-v li.b{position:relative;padding:.5em 0 .5em 1.4em;font-size:clamp(15px,1.7vw,20px)}
+.side li::before,.dk-v li.b::before{content:'';position:absolute;left:0;top:1em;width:.55em;height:.55em;border-radius:2px;background:var(--gd)}
+.side b,.dk-v b{color:var(--gd)}
+.rv{opacity:0;transform:translateY(14px);transition:opacity .45s,transform .45s;pointer-events:none;visibility:hidden}.rv.on{opacity:1;transform:none;pointer-events:auto;visibility:visible}
+.rule{margin-top:18px;border-left:5px solid var(--gd);background:rgba(240,185,11,.09);padding:11px 18px;border-radius:0 12px 12px 0;font-size:clamp(15px,1.7vw,19px)}
+.rule small{display:block;color:var(--gd);font:700 11px var(--fd);letter-spacing:.14em;margin-bottom:2px}
+.rule.dn{border-color:var(--dn);background:rgba(246,70,93,.09)}.rule.dn small{color:var(--dn)}
+.rule.up{border-color:var(--up);background:rgba(46,189,133,.09)}.rule.up small{color:var(--up)}
+.cov h2{font-size:clamp(32px,5.4vw,60px)}.cov p{color:var(--mu);font-size:clamp(16px,2vw,22px);max-width:36em}
+.chip{display:inline-block;background:var(--pn2);border:1px solid var(--ln);border-radius:99px;padding:4px 12px;margin:0 8px 8px 0;font-size:13px;color:var(--mu)}
+.cvbg{position:absolute;inset:0;opacity:.30;z-index:0;pointer-events:none}.cvbg .svg{height:100%;width:100%}
+.cmp{display:grid;grid-template-columns:1fr 1fr;gap:16px}.cmp>div{background:var(--pn);border:1px solid var(--ln);border-radius:16px;padding:14px 20px}.cmp h3{color:var(--gd);margin-bottom:.3em}
+.big .n{font:700 clamp(24px,4vw,46px)/1.2 var(--fd);color:var(--gd);margin:.2em 0 .5em}.big p{color:var(--mu);font-size:clamp(16px,2vw,22px)}
+table{border-collapse:collapse;width:100%;font-size:clamp(14px,1.7vw,19px)}th,td{border-bottom:1px solid var(--ln);padding:.55em .7em;text-align:left}th{color:var(--gd)}tr{animation:in .45s both}
+.note{color:var(--mu);font-size:14px;margin-top:12px}
+.pred{background:var(--pn);border:1px solid var(--bl);border-radius:18px;padding:20px 24px}.pred .q{font:600 clamp(18px,2.3vw,26px)/1.35 var(--fd)}
+.ans{margin-top:16px;border-left:5px solid var(--up);background:rgba(46,189,133,.1);padding:12px 18px;border-radius:0 12px 12px 0;font-size:clamp(16px,1.9vw,22px)}
+.ex li{position:relative;padding:.45em 0 .45em 2.3em;font-size:clamp(15px,1.7vw,20px);counter-increment:s}.ex{counter-reset:s}
+.ex li::before{content:counter(s);position:absolute;left:0;top:.5em;width:1.6em;height:1.6em;border-radius:50%;background:var(--gd);color:var(--ink);display:grid;place-items:center;font:700 .8em var(--fd)}
+.proof{margin-top:14px;border:1px dashed var(--gd);border-radius:14px;padding:11px 16px;color:#FFE08A}.proof small{color:var(--mu)}
+.calc{display:grid;grid-template-columns:1fr 1fr;gap:18px}.calc .f{display:grid;gap:10px}.calc label{display:grid;gap:4px;color:var(--mu);font-size:13px}
+.res{background:var(--pn);border:1px solid var(--up);border-radius:16px;padding:16px 20px}.res .v{font:700 clamp(28px,4vw,44px) var(--fd);color:var(--up)}
+.seg{display:flex;gap:8px;margin:0 0 8px}.seg button{padding:7px 12px}.seg button.on{background:var(--gd);color:var(--ink)}
+.dk-bar{display:flex;gap:10px;align-items:center;justify-content:center;padding:10px;border-top:1px solid var(--ln);background:rgba(8,14,28,.9);position:relative;z-index:3;flex-wrap:wrap}
+.wmk{position:fixed;inset:-25%;pointer-events:none;display:flex;flex-wrap:wrap;gap:70px 100px;transform:rotate(-24deg);opacity:.06;font:600 20px var(--fd);z-index:4;align-content:flex-start}
+.q{background:var(--pn);border:1px solid var(--ln);border-radius:18px;padding:20px 24px}.q h3{font-size:clamp(18px,2.3vw,25px);line-height:1.3;margin-bottom:12px}
+.opt{display:flex;gap:12px;width:100%;text-align:left;margin:8px 0;background:var(--pn2);color:var(--fg);border:1px solid var(--ln);font-weight:500;padding:12px 16px;align-items:center}
+.opt kbd{background:var(--ln);border-radius:6px;padding:1px 8px;font:700 12px var(--fd)}
+.opt.ok{border-color:var(--up);background:rgba(46,189,133,.18)}.opt.ko{border-color:var(--dn);background:rgba(246,70,93,.16)}
+.fb{margin-top:12px;border-radius:12px;padding:12px 16px;font-size:15px}.fb.ok{background:rgba(46,189,133,.12);border-left:4px solid var(--up)}.fb.ko{background:rgba(246,70,93,.12);border-left:4px solid var(--dn)}
+.rev{margin:8px 0;padding:10px 14px;border-radius:12px;background:var(--pn);border:1px solid var(--ln);font-size:14px}
+/* fiche */
+.fiche{position:fixed;inset:0;z-index:70;background:rgba(5,9,18,.88);display:flex;justify-content:center;overflow:auto;padding:3vh 3vw}
+.fiche .pg{background:#F7F9FD;color:#14213D;width:min(860px,100%);border-radius:14px;padding:34px 40px;height:fit-content;position:relative}
+.fiche h1{font-size:28px;color:#0B1B3A}.fiche h2{font-size:19px;color:#1D4ED8;margin:22px 0 6px}.fiche p,.fiche li{font-size:16px;line-height:1.6;color:#1E2A44}.fiche .obj{background:#E8F0FF;border-left:4px solid #1D4ED8;padding:10px 14px;border-radius:0 10px 10px 0}
+.fiche .pit{background:#FFF1F2;border-left:4px solid #E11D48;padding:6px 14px;border-radius:0 10px 10px 0}.fiche .keep{background:#ECFDF5;border-left:4px solid #059669;padding:6px 14px;border-radius:0 10px 10px 0}
+.fiche dt{font-weight:700;color:#0B1B3A;margin-top:8px}.fiche dd{margin:0 0 4px 0}.fiche .tb{position:sticky;top:0;display:flex;gap:8px;justify-content:flex-end;margin:-10px 0 8px}
+.fiche .disc{margin-top:26px;font-size:12px;color:#5B6B8C;border-top:1px solid #D5DEEF;padding-top:10px}
+#pr{display:none}
+@media print{body>*:not(#pr){display:none!important}#pr{display:block;color:#111;background:#fff;padding:0}#pr .wm2{position:fixed;inset:0;opacity:.07;font:600 22px sans-serif;transform:rotate(-24deg);line-height:3.2;overflow:hidden;color:#000}#pr .pg{position:relative}}
+@keyframes in{from{opacity:0;transform:translateY(1.6rem) scale(.98)}to{opacity:1;transform:none}}
+@keyframes dr{to{stroke-dashoffset:0}}@keyframes fd{from{opacity:0}to{opacity:1}}@keyframes pp{from{opacity:0;transform:scale(.6)}to{opacity:1;transform:none}}@keyframes tl{from{transform:rotate(0)}to{transform:rotate(-8deg)}}
+.draw{stroke-dasharray:1;stroke-dashoffset:1;animation:dr var(--t,.9s) var(--d,0s) ease forwards}
+.fade{opacity:0;animation:fd .6s var(--d,0s) forwards}.pop{opacity:0;transform-box:fill-box;transform-origin:center bottom;animation:pp .5s var(--d,0s) cubic-bezier(.2,.9,.3,1.3) forwards}
+.tilt{animation:tl 1.4s .5s ease forwards}
+@media(max-width:820px){.dl,.cmp,.calc{grid-template-columns:1fr}.fiche .pg{padding:22px 18px}}
+.brand{display:inline-flex;align-items:center;gap:10px}.brand b{font:700 22px var(--fd);letter-spacing:.04em}.brand i{font:italic 600 15px var(--fd);color:var(--gd)}.brand small{display:block;color:var(--mu);font:500 11px var(--fb);letter-spacing:.12em;text-transform:uppercase}
+.hello{font:600 18px var(--fd);margin-top:8px;padding:12px 16px;border-radius:14px;background:linear-gradient(90deg,rgba(76,154,255,.18),transparent);border:1px solid var(--ln)}.hello b{color:var(--gd)}
+.wlogo{position:absolute;inset:0;display:grid;place-items:center;opacity:.05;pointer-events:none;z-index:1}.wlogo svg{width:min(60vh,70vw);height:auto}
+.wlogo.f{position:fixed;opacity:.07}
+.term{display:grid;gap:14px;margin:6px 0 16px}.tt{font:700 clamp(34px,6vw,64px) var(--fd);color:var(--gd);line-height:1.05}
+.td,.te{padding:16px 20px;border-radius:16px;font-size:clamp(17px,2vw,24px);border:1px solid var(--ln)}.td{background:var(--pn)}.te{background:rgba(76,154,255,.1);border-color:#2b4a82}
+.td small,.te small{display:block;font:700 11px var(--fd);letter-spacing:.14em;color:var(--mu);margin-bottom:4px}
+
+.sim .f{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:14px}.sim label{display:grid;gap:4px;font-size:13px;color:var(--mu)}
+.sst{list-style:none;padding:0;margin:0;display:grid;gap:8px}.sst li{display:flex;gap:12px;align-items:center;background:var(--pn);border:1px solid var(--ln);border-radius:14px;padding:10px 14px;font-size:clamp(15px,1.7vw,19px)}.sn{width:30px;height:30px;border-radius:50%;background:var(--gd);color:var(--ink);display:grid;place-items:center;font:700 14px var(--fd);flex:none}.gu{color:var(--up)}.gd{color:var(--dn)}
+.fh{display:flex;justify-content:space-between;align-items:center;border-bottom:3px solid var(--gd);padding-bottom:10px;margin-bottom:12px;position:relative;z-index:2}.fm{display:grid;text-align:right;font-size:12px;color:var(--mu)}
+.dur{float:right;font-size:12px;color:var(--mu)}.lead{font-size:1.06em;border-left:4px solid var(--bl);padding-left:12px}
+.ft{width:100%;border-collapse:collapse;margin:8px 0}.ft th{background:#16305e;color:#fff;text-align:left;padding:6px 8px}.ft td{border:1px solid var(--ln);padding:6px 8px}
+.fiche .wlogo.f{position:absolute;border-radius:14px;overflow:hidden}.fiche .pg>*:not(.wlogo){position:relative;z-index:2}
+.fiche .ft td,.fiche .ft th{font-size:13.5px;line-height:1.45}
+</style></head><body>
+<header class="top"><h1>SMC <b>by Stephen</b></h1><div class="sub">Savoir · Maîtriser · Choisir — Beginner · Intermediate · Advanced · Management</div>
+<div class="row"><select id="role" onchange="try{localStorage.setItem('smc_role',this.value)}catch(e){};SMC.home()"><option value="eleve">Profil : Élève</option><option value="coach">Profil : Formateur</option></select><input id="who" placeholder="Ton nom (affiché partout)" value="" oninput="try{localStorage.setItem('smc_name',this.value)}catch(e){}"><span class="sub" style="margin:0;font-size:13px">Élève : cours + sa fiche à télécharger. Formateur : en plus, fiche formateur et notes (touche P).</span></div></header>
+<main id="m"></main>
+<script>// SMC by Stephen — bibliothèque de schémas de trading (SVG animés)
+(function(){
+const C={up:'#2EBD85',dn:'#F6465D',bl:'#4C9AFF',gd:'#F0B90B',vi:'#9B8CFF',mu:'#8FA3C8',fg:'#EAF1FF',ln:'#2A3D66',pn:'#14213D'};
+const svg=(s,vb='0 0 800 420')=>`<svg viewBox="${vb}" class="svg" xmlns="http://www.w3.org/2000/svg" role="img">${s}</svg>`;
+const t=(x,y,s,o={})=>`<text x="${x}" y="${y}" fill="${o.c||C.fg}" font-size="${o.s||16}" text-anchor="${o.a||'middle'}" font-weight="${o.w||600}" class="fade" style="--d:${o.d||0}s">${s}</text>`;
+const ln=(x1,y1,x2,y2,o={})=>`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${o.c||C.ln}" stroke-width="${o.w||2}" ${o.dash?`stroke-dasharray="${o.dash}" class="fade"`:'pathLength="1" class="draw"'} style="--d:${o.d||0}s"/>`;
+const path=(d,o={})=>`<path d="${d}" fill="none" stroke="${o.c||C.fg}" stroke-width="${o.w||3}" stroke-linecap="round" stroke-linejoin="round" pathLength="1" class="draw" style="--d:${o.d||0}s;--t:${o.t||1.1}s" ${o.mk?`marker-end="url(#ar${o.mk})"`:''}/>`;
+const box=(x,y,w,h,f,o={})=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${o.r??10}" fill="${f}" ${o.s?`stroke="${o.s}" stroke-width="2"`:''} opacity="${o.op||1}" class="pop" style="--d:${o.d||0}s"/>`;
+const defs=`<defs>${[['up',C.up],['dn',C.dn],['gd',C.gd],['bl',C.bl]].map(([k,c])=>`<marker id="ar${k}" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="${c}"/></marker>`).join('')}</defs>`;
+const mkY=(min,max,top,bot)=>v=>bot-(v-min)/(max-min)*(bot-top);
+function cd(x,o,h,l,c,y,w=22,d=0){const up=c>=o,col=up?C.up:C.dn;return `<g class="pop" style="--d:${d}s"><line x1="${x}" x2="${x}" y1="${y(h)}" y2="${y(l)}" stroke="${col}" stroke-width="3"/><rect x="${x-w/2}" y="${y(Math.max(o,c))}" width="${w}" height="${Math.max(2,Math.abs(y(o)-y(c)))}" rx="2" fill="${col}"/></g>`}
+const series=(a,x0,dx,y,d0=0,st=.18,w=22)=>a.map((k,i)=>cd(x0+i*dx,k[0],k[1],k[2],k[3],y,w,d0+i*st)).join('');
+const grid=(x1,y1,x2,y2,n=5)=>Array.from({length:n},(_,i)=>`<line x1="${x1}" x2="${x2}" y1="${y1+(y2-y1)*i/(n-1)}" y2="${y1+(y2-y1)*i/(n-1)}" stroke="${C.ln}" stroke-width="1" opacity=".5"/>`).join('');
+const D={};
+
+D.week=()=>{const days=['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'];return svg(defs+days.map((d,i)=>{const on=i<5;return box(50+i*105,120,92,150,on?'#14325A':'#1A2036',{s:on?C.bl:C.ln,d:i*.12})+t(96+i*105,170,d,{s:20,c:on?C.fg:C.mu,d:i*.12})+t(96+i*105,215,on?'24 h':'fermé',{s:on?26:16,c:on?C.up:C.mu,w:700,d:i*.12+.2})}).join('')+t(400,70,'Le Forex : ouvert 24 h sur 24, du lundi au vendredi',{s:22})+t(400,330,'Quand une place ferme (Tokyo), une autre ouvre (Londres, puis New York)',{c:C.mu,s:16,d:1})+t(400,375,'Week-end : le marché des devises est fermé',{c:C.gd,s:16,d:1.3}))};
+
+D.flow=(a)=>{const noA=a[0]==='-';if(noA)a=a.slice(1);const n=a.length,w=Math.min(190,720/n-30),gap=(720-n*w)/(n-1||1);return svg(defs+a.map((x,i)=>{const X=40+i*(w+gap);return box(X,150,w,110,x[1]||'#14325A',{s:x[2]||C.bl,d:i*.35})+t(X+w/2,200,x[0],{s:17,d:i*.35+.1})+(x[3]?t(X+w/2,228,x[3],{s:13,c:C.mu,w:500,d:i*.35+.2}):'')+(i<n-1&&!noA?path(`M${X+w+6} 205 L${X+w+gap-8} 205`,{c:C.gd,mk:'gd',d:i*.35+.3,t:.5}):'')}).join(''))};
+
+D.pairs=()=>svg(defs+t(400,70,'EUR / USD = 1,0800',{s:46,w:700})+
+ box(110,110,210,70,'#14325A',{s:C.bl,d:.4})+t(215,138,'EUR · devise de BASE',{s:17,d:.5})+t(215,162,'ce que tu achètes / vends',{s:13,c:C.mu,w:500,d:.6})+path('M215 108 L330 82',{c:C.bl,w:2,d:.5,t:.5})+
+ box(480,110,210,70,'#3A1B2A',{s:C.dn,d:.8})+t(585,138,'USD · devise de COTATION',{s:17,d:.9})+t(585,162,'combien ça coûte',{s:13,c:C.mu,w:500,d:1})+path('M585 108 L470 82',{c:C.dn,w:2,d:.9,t:.5})+
+ box(240,235,320,64,'#16263F',{s:C.gd,d:1.3})+t(400,263,'1 euro vaut 1,0800 dollar',{s:20,c:C.gd,d:1.4})+t(400,286,'si le prix monte → l’euro se renforce',{s:13,c:C.mu,w:500,d:1.6})+
+ ['EUR','USD','GBP','JPY','CHF','AUD','CAD','NZD'].map((c,i)=>box(70+i*85,335,72,40,'#10213B',{s:C.ln,r:8,d:2+i*.1})+t(106+i*85,361,c,{s:17,d:2+i*.1})).join(''));
+
+D.fam=()=>svg(defs+[['MAJEURES','avec le dollar (USD)','EUR/USD · GBP/USD · USD/JPY','#12382E',C.up],['CROISÉES','sans le dollar','EUR/GBP · GBP/JPY · EUR/CHF','#14325A',C.bl],['EXOTIQUES','devise d’un pays émergent','USD/ZAR · EUR/TRY','#3A2B12',C.gd]].map((x,i)=>box(40+i*252,90,232,230,x[3],{s:x[4],d:i*.4})+t(156+i*252,140,x[0],{s:22,c:x[4],w:700,d:i*.4+.2})+t(156+i*252,175,x[1],{s:14,c:C.mu,w:500,d:i*.4+.3})+t(156+i*252,235,x[2].split(' · ')[0],{s:20,d:i*.4+.5})+t(156+i*252,265,x[2].split(' · ')[1]||'',{s:20,d:i*.4+.6})+t(156+i*252,295,x[2].split(' · ')[2]||'',{s:20,d:i*.4+.7})).join('')+
+ t(156,365,'spread bas · conseillé pour débuter',{s:14,c:C.up,d:1.6})+t(408,365,'spread moyen',{s:14,c:C.mu,d:1.7})+t(660,365,'spread élevé · à éviter au début',{s:14,c:C.gd,d:1.8}));
+
+D.longshort=()=>{const y=mkY(0,100,60,330);return svg(defs+
+ t(200,50,'ACHETER (long)',{s:22,c:C.up,w:700})+t(600,50,'VENDRE (short)',{s:22,c:C.dn,w:700})+ln(400,40,400,380,{dash:'5 5'})+
+ path('M60 300 L110 250 L150 270 L220 190 L260 215 L340 110',{c:C.up,w:4})+box(60,284,80,28,C.bl,{r:6,d:.2})+t(100,303,'ENTRÉE',{s:13,d:.3})+box(300,92,80,28,C.up,{r:6,d:1.1})+t(340,111,'SORTIE',{s:13,c:'#04211A',d:1.2})+
+ t(200,355,'Tu gagnes si le prix MONTE',{s:16,d:1.3})+
+ path('M460 110 L510 170 L550 150 L620 230 L660 210 L740 300',{c:C.dn,w:4})+box(460,94,80,28,C.bl,{r:6,d:.2})+t(500,113,'ENTRÉE',{s:13,d:.3})+box(700,284,80,28,C.dn,{r:6,d:1.1})+t(740,303,'SORTIE',{s:13,d:1.2})+
+ t(600,355,'Tu gagnes si le prix BAISSE',{s:16,d:1.3}))};
+
+D.bidask=()=>svg(defs+
+ box(250,150,320,86,'rgba(240,185,11,.16)',{r:6,d:.6})+
+ ln(230,150,590,150,{c:C.bl,w:3,d:.2})+ln(230,236,590,236,{c:C.dn,w:3,d:.4})+
+ t(410,134,'ASK : le prix où TU ACHÈTES',{c:C.bl,s:18,d:.3})+t(410,262,'BID : le prix où TU VENDS',{c:C.dn,s:18,d:.5})+t(410,200,'SPREAD = Ask − Bid (ton coût)',{c:C.gd,s:19,d:.9})+
+ box(30,118,150,52,C.up,{d:.8})+t(105,151,'▲ ACHAT',{s:19,c:'#04211A',d:.9})+path('M184 144 L226 150',{c:C.up,mk:'up',w:3,d:1,t:.4})+
+ box(620,212,150,52,C.dn,{d:.8})+t(695,245,'▼ VENTE',{s:19,d:.9})+path('M616 238 L594 236',{c:C.dn,mk:'dn',w:3,d:1,t:.4})+
+ t(400,325,'Tu entres à l’Ask, mais ta sortie se fait au Bid :',{s:17,d:1.5})+t(400,352,'ton trade démarre donc légèrement en perte (le spread).',{s:17,c:C.gd,d:1.7}));
+
+D.pip=()=>{const y=mkY(1.0795,1.0830,50,340);const s=[[1.0800,1.0806,1.0798,1.0804],[1.0804,1.0812,1.0802,1.0810],[1.0810,1.0815,1.0806,1.0808],[1.0808,1.0820,1.0807,1.0818],[1.0818,1.0826,1.0815,1.0825]];return svg(defs+grid(90,50,700,340,5)+series(s,200,70,y,.2,.25,34)+
+ ln(110,y(1.0800),700,y(1.0800),{c:C.bl,dash:'6 5',d:.3})+ln(110,y(1.0825),700,y(1.0825),{c:C.gd,dash:'6 5',d:1.4})+
+ t(100,y(1.0800)+5,'1,0800',{a:'end',c:C.bl,s:15,d:.3})+t(100,y(1.0825)+5,'1,0825',{a:'end',c:C.gd,s:15,d:1.4})+
+ path(`M640 ${y(1.0800)} L640 ${y(1.0825)}`,{c:C.gd,w:4,d:1.6,t:.6,mk:'gd'})+box(660,y(1.0812)-22,120,44,'#3A2B12',{s:C.gd,d:2})+t(720,y(1.0812)+7,'25 pips',{s:21,c:C.gd,w:700,d:2.1})+
+ t(400,385,'1 pip = 0,0001 sur EUR/USD (0,01 avec le yen)',{s:16,c:C.mu,d:2.3}))};
+
+D.lots=()=>svg(defs+t(400,55,'Le lot = la taille de ta position',{s:22})+
+ [['STANDARD · 1,00','100 000 unités · ≈ 10 $ par pip',620,C.bl],['MINI · 0,10','10 000 unités · ≈ 1 $ par pip',360,C.vi],['MICRO · 0,01','1 000 unités · ≈ 0,10 $ par pip',160,C.up]].map((x,i)=>box(60,100+i*85,x[2],56,x[3],{d:i*.4,op:.9})+t(80,135+i*85,x[0],{a:'start',s:18,c:'#06101F',d:i*.4+.2})+t(70+x[2]+12,135+i*85,x[1],{a:'start',s:14,c:C.mu,w:500,d:i*.4+.3})).join('')+t(400,385,'(longueurs non proportionnelles) · Débutant : micro-lot',{s:15,c:C.gd,d:1.6}));
+
+D.lever=()=>svg(defs+
+ `<g class="tilt" style="transform-origin:400px 270px"><rect x="130" y="262" width="540" height="14" rx="7" fill="${C.gd}"/>${box(150,212,90,50,C.bl,{r:6,d:.4})}${t(195,243,'1 000 $',{s:18,d:.6})}${box(560,110,100,150,'rgba(76,154,255,.25)',{s:C.bl,r:6,d:.8})}${t(610,200,'100 000 $',{s:19,d:1})}</g>`+
+ `<polygon points="400,276 360,336 440,336" fill="#8FA3C8" class="pop" style="--d:.2s"/>`+t(400,312,'1:100',{s:18,c:'#06101F',d:.5})+
+ t(195,300,'ta marge (garantie)',{s:14,c:C.mu,w:500,d:.8})+t(610,300,'position contrôlée',{s:14,c:C.mu,w:500,d:1.1})+
+ t(400,28,'Le levier : un petit capital contrôle une grosse position',{s:21})+t(400,370,'⚔ Un mouvement de 1 % = 1 000 $ = 100 % de ta marge : il amplifie gains ET pertes',{s:16,c:C.gd,d:2}));
+
+D.orders=()=>{return svg(defs+
+ ln(40,210,760,210,{c:C.fg,w:2,d:0})+t(740,200,'Prix actuel',{a:'end',s:14,c:C.mu})+ln(400,70,400,400,{dash:'5 5'})+
+ t(220,36,'RETOURNEMENT · Limit',{s:18,c:C.vi,w:700})+t(580,36,'CONTINUATION · Stop',{s:18,c:C.gd,w:700})+
+ ln(70,100,370,100,{c:C.dn,dash:'7 5'})+t(370,92,'Sell Limit',{a:'end',s:14,c:C.dn})+path('M90 200 L250 108',{c:C.mu,w:3,d:.3,t:.7})+path('M250 108 L335 175',{c:C.dn,w:4,mk:'dn',d:1,t:.6})+
+ ln(70,320,370,320,{c:C.up,dash:'7 5'})+t(370,344,'Buy Limit',{a:'end',s:14,c:C.up})+path('M90 220 L250 312',{c:C.mu,w:3,d:1.4,t:.7})+path('M250 312 L335 245',{c:C.up,w:4,mk:'up',d:2.1,t:.6})+
+ ln(430,100,730,100,{c:C.up,dash:'7 5'})+t(730,92,'Buy Stop',{a:'end',s:14,c:C.up})+path('M450 200 L560 108',{c:C.mu,w:3,d:.6,t:.7})+path('M560 108 L690 48',{c:C.up,w:4,mk:'up',d:1.3,t:.6})+
+ ln(430,320,730,320,{c:C.dn,dash:'7 5'})+t(730,344,'Sell Stop',{a:'end',s:14,c:C.dn})+path('M450 220 L560 312',{c:C.mu,w:3,d:1.7,t:.7})+path('M560 312 L690 385',{c:C.dn,w:4,mk:'dn',d:2.4,t:.6})+
+ t(220,392,'« j’attends un meilleur prix »',{s:14,c:C.mu,w:500,d:2.6})+t(580,392,'« j’attends que ça casse »',{s:14,c:C.mu,w:500,d:2.7}))};
+
+D.mt5=(hot)=>svg(defs+
+ box(20,20,760,380,'#0F1A30',{s:C.ln,r:12})+box(20,20,760,30,'#18284A',{r:12})+t(60,41,'Fichier  Affichage  Insérer  Graphiques  Outils',{a:'start',s:12,c:C.mu,w:500})+
+ box(32,60,170,190,'#0A1427',{s:C.ln,r:6,d:.2})+t(117,82,'Market Watch',{s:13,c:C.gd})+['EURUSD  1.0800 / 1.0802','GBPUSD  1.2650 / 1.2653','USDJPY  151.20 / 151.22'].map((s,i)=>t(44,110+i*28,s,{a:'start',s:11,c:C.fg,w:500,d:.4+i*.1})).join('')+
+ box(212,60,420,190,'#0A1427',{s:C.ln,r:6,d:.3})+grid(220,70,624,240,5)+series([[30,60,25,55],[55,70,50,52],[52,56,35,40],[40,75,38,70],[70,90,62,64],[64,66,45,50],[50,92,48,88]],245,52,mkY(20,100,75,235),.6,.12,18)+t(422,82,'EURUSD · H1',{s:13,c:C.mu,d:.6})+
+ box(642,60,126,190,'#0A1427',{s:C.ln,r:6,d:.5})+t(705,82,'Navigator',{s:13,c:C.gd})+
+ box(32,262,736,128,'#0A1427',{s:C.ln,r:6,d:.7})+t(70,284,'Trade',{s:13,c:C.gd})+t(130,284,'History',{s:13,c:C.mu})+t(200,284,'Exposure',{s:13,c:C.mu})+
+ t(50,312,'Balance 1 000.00   Equity 1 004.20   Margin 11.02   Free Margin 993.18',{a:'start',s:13,c:C.fg,w:500,d:1})+
+ t(50,340,'EURUSD  buy  0.01   1.0802   SL 1.0782   TP 1.0842   +4.20',{a:'start',s:13,c:C.up,w:500,d:1.2})+
+ [[117,60,'1','Market Watch · Ctrl+M'],[422,60,'2','Graphique'],[400,262,'3','Boîte à outils · Ctrl+T (Trade / History)'],[705,60,'4','Navigator · Ctrl+N']].map((p,i)=>`<g class="pop" style="--d:${1.5+i*.25}s"><circle cx="${p[0]+(i==2?-250:0)}" cy="${p[1]+(i==2?8:0)}" r="13" fill="${C.gd}"/><text x="${p[0]+(i==2?-250:0)}" y="${p[1]+(i==2?13:5)}" text-anchor="middle" font-size="14" font-weight="800" fill="#07101F">${p[2]}</text></g>`).join('')+
+ t(400,415,'1 Market Watch · 2 Graphique · 3 Boîte à outils (Trade, History) · 4 Navigator',{s:13,c:C.mu,w:500,d:2.5}));
+
+D.anat=()=>{const c=(x,col,hi,top,bot,lo,d)=>`<g class="pop" style="--d:${d}s"><line x1="${x}" x2="${x}" y1="${hi}" y2="${lo}" stroke="${col}" stroke-width="4"/><rect x="${x-34}" y="${top}" width="68" height="${bot-top}" rx="4" fill="${col}"/></g>`;
+ const lab=(arr,x1,x2,anc,off)=>arr.map(([s,yy],i)=>ln(x1,yy,x2,yy,{dash:'4 4',d:.8+i*.2})+t(anc=='end'?x1-8:x2+8,yy+5,s,{a:anc=='end'?'end':'start',s:15,d:.8+i*.2})).join('');
+ return svg(defs+c(280,C.up,60,120,250,300,0)+c(540,C.dn,60,120,250,300,.5)+
+ lab([['Plus haut (High)',60],['Clôture (Close)',120],['Ouverture (Open)',250],['Plus bas (Low)',300]],150,280,'end')+
+ lab([['Plus haut (High)',60],['Ouverture (Open)',120],['Clôture (Close)',250],['Plus bas (Low)',300]],540,670,'start')+
+ path('M232 235 L232 135',{c:'#fff',w:3,mk:'up',d:1.8,t:.6})+path('M588 135 L588 235',{c:'#fff',w:3,mk:'dn',d:1.8,t:.6})+
+ t(280,345,'HAUSSIÈRE · clôture > ouverture',{c:C.up,s:16})+t(540,345,'BAISSIÈRE · clôture < ouverture',{c:C.dn,s:16})+
+ t(410,392,'Corps = de l’ouverture à la clôture · Mèches = les extrêmes atteints',{s:14,c:C.mu,w:500,d:2.2}))};
+
+D.wicks=()=>{const c=(x,col,hi,top,bot,lo,d)=>`<g class="pop" style="--d:${d}s"><line x1="${x}" x2="${x}" y1="${hi}" y2="${lo}" stroke="${col}" stroke-width="4"/><rect x="${x-30}" y="${top}" width="60" height="${Math.max(3,bot-top)}" rx="3" fill="${col}"/></g>`;
+ return svg(defs+c(140,C.dn,50,200,260,330,0)+c(400,C.up,60,100,160,330,.5)+c(660,C.mu,50,190,196,330,1)+
+ t(140,370,'Longue mèche HAUTE',{s:17,c:C.dn,d:.3})+t(140,394,'les vendeurs ont repoussé le prix',{s:13,c:C.mu,w:500,d:.4})+
+ t(400,370,'Longue mèche BASSE',{s:17,c:C.up,d:.8})+t(400,394,'les acheteurs ont repoussé le prix',{s:13,c:C.mu,w:500,d:.9})+
+ t(660,370,'DOJI · indécision',{s:17,c:C.gd,d:1.3})+t(660,394,'équilibre acheteurs / vendeurs',{s:13,c:C.mu,w:500,d:1.4})+
+ t(140,30,'Rejet du haut',{s:15,c:C.dn,d:.3})+t(400,30,'Rejet du bas',{s:15,c:C.up,d:.8})+t(660,30,'Pas de gagnant',{s:15,c:C.gd,d:1.3}))};
+
+D.fractal=()=>{const y=mkY(0,100,50,330);return svg(defs+cd(130,20,95,10,80,y,70,0)+t(130,365,'1 bougie H4',{s:17,c:C.bl})+
+ [95,80,20,10].map((v,i)=>ln(165,y(v),[740,740,740,740][i],y(v),{dash:'3 6',d:.8+i*.1})).join('')+
+ path('M215 190 L330 190',{c:C.gd,w:3,mk:'gd',d:.6,t:.6})+t(272,172,'est composée de',{s:14,c:C.gd,d:.8})+
+ series([[20,22,10,14],[14,44,12,40],[40,70,38,65],[65,95,62,80]],430,80,y,1,.5,44)+t(550,365,'4 bougies H1',{s:17,c:C.vi,d:1.2})+
+ t(745,y(95)-6,'High',{a:'end',s:12,c:C.mu,w:500})+t(745,y(10)-6,'Low',{a:'end',s:12,c:C.mu,w:500})+t(745,y(80)-6,'Close',{a:'end',s:12,c:C.mu,w:500})+t(745,y(20)-6,'Open',{a:'end',s:12,c:C.mu,w:500})+
+ t(400,28,'Même histoire à toutes les échelles : le marché est fractal',{s:18}))};
+
+D.scales=()=>{const y=mkY(0,50,70,250);const up=[[10,20,8,18],[18,26,15,24],[24,30,20,22],[22,34,21,32],[32,42,30,40]];const dn=up.map(k=>k.map(v=>50-v)).map(k=>[k[0],k[2],k[1],k[3]]);
+ const bars=(x,a,b)=>box(x,300-a,50,a,C.up,{d:.2,r:4})+box(x+70,300-b,50,b,C.dn,{d:.4,r:4})+t(x+25,322,'DEMANDE',{s:12,c:C.up})+t(x+95,322,'OFFRE',{s:12,c:C.dn});
+ return svg(defs+t(200,40,'DEMANDE > OFFRE',{s:19,c:C.up,w:700})+t(600,40,'OFFRE > DEMANDE',{s:19,c:C.dn,w:700})+ln(400,30,400,390,{dash:'5 5'})+
+ bars(40,170,70)+series(up,235,34,y,.8,.2,16)+bars(430,70,170)+series(dn.reverse().map((k,i)=>k),625,34,y,.8,.2,16)+
+ t(200,365,'Plus d’acheteurs que de vendeurs → le prix MONTE',{s:14,c:C.mu,w:500,d:1.8})+t(600,365,'Plus de vendeurs que d’acheteurs → le prix BAISSE',{s:14,c:C.mu,w:500,d:1.9}))};
+
+D.iceberg=()=>svg(defs+`<rect x="0" y="170" width="800" height="250" fill="rgba(76,154,255,.10)"/>`+ln(0,170,800,170,{c:C.bl,w:3})+
+ `<polygon points="330,170 400,70 470,170" fill="#DCE8FF" class="pop"/><polygon points="250,170 400,370 550,170" fill="#27406E" class="pop" style="--d:.5s"/>`+
+ t(400,150,'Petits ordres',{s:15,c:'#0B1730'})+t(400,235,'Banques · fonds · algorithmes',{s:15,d:.8})+t(400,262,'ordres énormes',{s:14,c:C.gd,d:1})+
+ box(560,60,220,70,'#14325A',{s:C.bl,d:1.1})+t(670,90,'Particuliers (toi)',{s:16,d:1.2})+t(670,114,'nombreux, petits ordres',{s:13,c:C.mu,w:500,d:1.3})+
+ box(570,250,210,86,'#2A1F3F',{s:C.vi,d:1.4})+t(675,280,'Institutions',{s:16,d:1.5})+t(675,304,'gros volumes : il leur faut',{s:13,c:C.mu,w:500,d:1.6})+t(675,322,'des contreparties',{s:13,c:C.mu,w:500,d:1.7})+
+ t(150,60,'Ce qu’on voit',{s:16,c:C.mu})+t(150,300,'Ce qu’on ne voit pas',{s:16,c:C.mu,d:.8})+t(150,326,'(on lit seulement ses traces)',{s:13,c:C.mu,w:500,d:.9}));
+
+D.liquidity=()=>{const y=mkY(25,85,50,340);const s=[[40,55,38,52],[52,70,50,60],[60,62,48,50],[50,52,40,45],[45,70,44,58],[58,60,50,52],[52,78,51,54],[54,55,40,42],[42,44,30,32]];
+ return svg(defs+grid(60,50,760,340,5)+series(s,90,76,y,.2,.35,30)+ln(110,y(70),620,y(70),{c:C.gd,dash:'7 5',d:1.2})+
+ t(70,y(70)+5,'sommets égaux',{a:'end',s:13,c:C.gd,d:1.3})+box(120,y(70)-62,260,30,'#3A2B12',{s:C.gd,r:6,d:1.5})+t(250,y(70)-42,'stops + ordres d’achat groupés',{s:13,c:C.gd,d:1.6})+
+ path(`M${90+6*76} ${y(78)-30} L${90+6*76} ${y(78)-6}`,{c:C.vi,w:4,mk:'gd',d:2.8,t:.4})+box(560,y(90),200,58,'#2A1F3F',{s:C.vi,d:3})+t(660,y(90)+26,'BALAYAGE (sweep)',{s:15,c:C.vi,d:3.1})+t(660,y(90)+46,'la liquidité est prise, puis le prix repart',{s:11,c:C.mu,w:500,d:3.2})+
+ path(`M${90+6*76+40} ${y(54)} L${90+8*76} ${y(30)}`,{c:C.dn,w:3,mk:'dn',d:3.4,t:.6}))};
+
+D.sessions=(sea)=>{const off=sea==='s'?7:sea==='w'?8:(()=>{try{return /EDT/.test(new Date().toLocaleString('en-US',{timeZone:'America/New_York',timeZoneName:'short'}))?7:8}catch(e){return 8}})();
+ const X=h=>60+h*29,rows=[['Asie',18,26,C.vi],['Londres',3,11,C.bl],['New York',8,16,C.up]];const seg=(a,b)=>{a=(a+off)%24;b=a+(b-(a-(a%1)))*0;return a};
+ const bars=(nyA,nyB,col,yy,h,lab,d)=>{let a=(nyA+off)%24,len=nyB-nyA,out='';const e=a+len;if(e<=24)out=box(X(a),yy,len*29,h,col,{r:6,d});else out=box(X(a),yy,(24-a)*29,h,col,{r:6,d})+box(X(0),yy,(e-24)*29,h,col,{r:6,d});return out+t(X(a)+4,yy+h/2+5,lab,{a:'start',s:13,c:'#06101F',d:d+.2})};
+ let now='';try{const m=new Date().toLocaleTimeString('fr-FR',{timeZone:'Indian/Antananarivo',hour:'2-digit',minute:'2-digit'}).split(':');const hh=+m[0]+(+m[1])/60;now=ln(X(hh),70,X(hh),345,{c:C.dn,w:3,d:1.8})+t(X(hh),62,'maintenant '+m[0]+'h'+m[1],{s:13,c:C.dn,d:1.9})}catch(e){}
+ const hrs=Array.from({length:13},(_,i)=>t(X(i*2),372,i*2+'h',{s:12,c:C.mu,w:500})+`<line x1="${X(i*2)}" x2="${X(i*2)}" y1="78" y2="350" stroke="${C.ln}" opacity=".5"/>`).join('');
+ return svg(defs+hrs+t(60,30,'Heure de MADAGASCAR (UTC+3)',{a:'start',s:17})+t(740,30,off===7?'été US (UTC−4)':'hiver US (UTC−5)',{a:'end',s:15,c:C.gd})+
+ bars(18,26,'#6B5BD6',92,38,'ASIE',.1)+bars(3,11,'#3E86E6',150,38,'LONDRES',.3)+bars(8,16,'#26A878',208,38,'NEW YORK',.5)+
+ bars(3,5,C.gd,264,30,'Londres',.9)+bars(8,11,C.gd,300,30,'New York',1.1)+
+ bars(16,18,'#8A3347',336,16,'',1.3)+t(X((16+off)%24)+60,349,'zone à éviter',{a:'start',s:12,c:C.dn,d:1.5})+now+t(400,404,'Heure de New York : Asie 18h–02h · Londres 03h–11h · New York 08h–16h',{s:13,c:C.mu,w:500,d:1.6}),'0 0 800 420')};
+
+D.rr=()=>{const E=230;return svg(defs+box(180,E-140,440,140,'rgba(46,189,133,.22)',{s:C.up,r:6,d:.4})+box(180,E,440,70,'rgba(246,70,93,.22)',{s:C.dn,r:6,d:.7})+ln(160,E,640,E,{c:C.fg,w:2,d:.2})+
+ t(660,E+5,'ENTRÉE',{a:'start',s:15,d:.3})+t(660,E-135,'TP · +2R',{a:'start',s:16,c:C.up,d:.6})+t(660,E+72,'SL · −1R',{a:'start',s:16,c:C.dn,d:.9})+
+ t(400,E-60,'RÉCOMPENSE = 2 × le risque',{s:18,c:C.up,d:.8})+t(400,E+40,'RISQUE = 1R',{s:18,c:C.dn,d:1.1})+
+ path(`M200 ${E+30} L260 ${E-10} L310 ${E+20} L380 ${E-50} L430 ${E-30} L520 ${E-130}`,{c:C.gd,w:4,d:1.5,t:1.6})+
+ t(400,60,'Ratio R/R 1:2 — tu risques 1 pour viser 2',{s:22})+t(400,365,'Même avec seulement 1 trade gagnant sur 3, tu t’en sors (hors frais)',{s:16,c:C.gd,d:3}))};
+
+D.breakeven=()=>{const rows=[['1:1',50],['1:2',33.3],['1:3',25],['1:4',20],['1:5',16.7]];return svg(defs+t(400,40,'Taux de réussite minimum pour ne pas perdre (hors frais)',{s:19})+rows.map((r,i)=>{const h=r[1]*5.4,x=90+i*130;return box(x,330-h,90,h,i<2?C.gd:C.up,{r:6,d:i*.25})+t(x+45,350,'R/R '+r[0],{s:15,c:C.mu,d:i*.25})+t(x+45,330-h-10,r[1].toString().replace('.',',')+' %',{s:20,w:700,d:i*.25+.4})}).join('')+t(400,395,'Formule : 1 ÷ (1 + R)',{s:16,c:C.gd,d:1.6}))};
+
+D.equity=()=>{const X=n=>90+n*105,Y=v=>350-(v-70)/(101-70)*300,p=r=>Array.from({length:7},(_,n)=>[X(n),Y(100*Math.pow(1-r,n))]);const P=a=>'M'+a.map(q=>q.join(' ')).join(' L');
+ return svg(defs+grid(90,50,720,350,4)+[70,80,90,100].map(v=>t(70,Y(v)+5,v,{a:'end',s:12,c:C.mu,w:500})).join('')+Array.from({length:7},(_,n)=>t(X(n),375,n,{s:13,c:C.mu,w:500})).join('')+t(405,398,'nombre de pertes consécutives',{s:12,c:C.mu,w:500})+
+ path(P(p(.01)),{c:C.up,w:5,t:1.4})+path(P(p(.05)),{c:C.dn,w:5,d:.3,t:1.4})+
+ t(722,Y(94.1)-10,'94,1',{a:'start',s:18,c:C.up,d:1.8})+t(722,Y(73.5)+20,'73,5',{a:'start',s:18,c:C.dn,d:1.9})+
+ box(130,60,230,64,'#12382E',{s:C.up,d:.5})+t(245,86,'Risque 1 % par trade',{s:16,c:C.up,d:.6})+t(245,110,'6 pertes → −5,9 %',{s:14,c:C.mu,w:500,d:.7})+
+ box(130,134,230,64,'#3A1B2A',{s:C.dn,d:.9})+t(245,160,'Risque 5 % par trade',{s:16,c:C.dn,d:1})+t(245,184,'6 pertes → −26,5 %',{s:14,c:C.mu,w:500,d:1.1})+
+ t(400,30,'Capital de 100 après une série de pertes',{s:19}))};
+
+
+// ---- graphique pédagogique à partir de points de swing ----
+D.zz=(s)=>{const k=s.k||3,sw=s.sw,n=sw.length,rnd=i=>{const x=Math.sin(i*12.9898+7.233)*43758.5453;return x-Math.floor(x)};
+ const Cn=[];const up0=sw[1]>sw[0],a0=Math.abs(sw[1]-sw[0])/k;Cn.push(up0?[sw[0]+a0*.5,sw[0]+a0*.7,sw[0],sw[0]+a0*.15]:[sw[0]-a0*.5,sw[0],sw[0]-a0*.7,sw[0]-a0*.15]);
+ for(let j=0;j<n-1;j++){const a=sw[j],b=sw[j+1],up=b>a,st=(b-a)/k,as=Math.abs(st);for(let m=1;m<=k;m++){const o=Cn[Cn.length-1][3];let c=a+st*m+(m<k?(rnd(j*9+m)-.5)*as*.5:0);if(m===k)c=b-(up?1:-1)*as*.15;const w=as*(.12+.3*rnd(j*7+m));let h=Math.max(o,c)+w,l=Math.min(o,c)-w;if(m===k){if(up)h=b;else l=b}if(up){h=Math.min(h,b);l=Math.max(l,Math.min(a,o))}else{l=Math.max(l,b);h=Math.min(h,Math.max(a,o))}Cn.push([o,h,l,c])}}
+ (s.ov||[]).forEach(([i,c])=>{Cn[i]=c});const N=Cn.length,lo=Math.min(...Cn.map(c=>c[2])),hi=Math.max(...Cn.map(c=>c[1])),pad=(hi-lo)*.12,x0=45,x1=s.xr||690,dx=(x1-x0)/N,y=mkY(lo-pad,hi+pad,s.title?62:40,372),X=i=>x0+dx*(i+.5),sx=j=>X(j*k);
+ let o=grid(x0,40,x1,372,5);const cw=Math.min(18,dx*.6);o+=Cn.map((c,i)=>cd(X(i),c[0],c[1],c[2],c[3],y,cw,Math.min(i*.06,2.4))).join('');let d=Math.min(N*.06,2.4)+.3,q=0;
+ const E=v=>v==='end'?x1:(typeof v==='number'?sx(v):x1);
+ (s.zones||[]).forEach(z=>{const xa=sx(z.s1),xb=E(z.s2);o+=`<g class="pop" style="--d:${d+q*.4}s"><rect x="${xa}" y="${y(Math.max(z.p1,z.p2))}" width="${xb-xa}" height="${Math.abs(y(z.p1)-y(z.p2))}" rx="4" fill="${z.c}" opacity=".22" stroke="${z.c}" stroke-width="1.5"/></g>`+(z.t?t(xa+6,y(Math.max(z.p1,z.p2))+16,z.t,{a:'start',s:13,c:z.c,d:d+q*.4}):'');q++});
+ (s.lines||[]).forEach(l=>{const p=typeof l.p==='number'?l.p:sw[l.p.s],xa=sx(l.f||0),xb=E(l.e);o+=ln(xa,y(p),xb,y(p),{c:l.c||C.gd,dash:l.dash===false?null:'6 5',d:d+q*.4,w:2})+(l.t?t(xb+6,y(p)+5,l.t,{a:'start',s:13,c:l.c||C.gd,d:d+q*.4}):'');q++});
+ (s.arrows||[]).forEach(a=>{o+=path(`M${sx(a.a[0])} ${y(a.a[1])} L${sx(a.b[0])} ${y(a.b[1])}`,{c:a.c||C.fg,w:3,mk:a.m||'gd',d:d+q*.4,t:.6});if(a.t)o+=t((sx(a.a[0])+sx(a.b[0]))/2,(y(a.a[1])+y(a.b[1]))/2-10,a.t,{s:13,c:a.c||C.fg,d:d+q*.4+.4});q++});
+ (s.ann||[]).forEach(a=>{const idx=a.s!=null?a.s:null,pr=idx!=null?sw[idx]:a.p,xx=idx!=null?sx(idx):X(a.i),dn=a.d?a.d==='d':idx!=null&&idx>0&&idx<n-1?(sw[idx]<sw[idx-1]&&sw[idx]<sw[idx+1]):(idx===0?sw[1]>sw[0]:sw[n-1]<sw[n-2]);const yy=y(pr)+(dn?22:-12);o+=`<circle cx="${xx}" cy="${y(pr)}" r="4" fill="${a.c||C.gd}" class="pop" style="--d:${d+q*.4}s"/>`+t(xx,yy+(a.dy||0),a.t,{s:a.z||15,c:a.c||C.gd,w:700,d:d+q*.4});q++});
+ (s.txt||[]).forEach(a=>{o+=t(typeof a.x==='number'&&a.x<=n?sx(a.x):a.x,y(a.p),a.t,{s:a.z||14,c:a.c||C.fg,a:a.a||'middle',d:d+q*.4});q++});
+ if(s.title)o+=t(x0,30,s.title,{a:'start',s:18});if(s.cap)o+=t(400,398,s.cap,{s:14,c:C.mu,w:500,d:d+q*.4});
+ return svg(defs+o)};
+
+D.steps=(s)=>{const it=s.items,cols=s.cols||Math.ceil(it.length/2),rows=Math.ceil(it.length/cols),w=(740-(cols-1)*14)/cols,h=rows>1?150:130;return svg(defs+(s.title?t(400,34,s.title,{s:20}):'')+it.map((x,i)=>{const cx=30+(i%cols)*(w+14),cy=(rows>1?60:120)+Math.floor(i/cols)*(h+14);return box(cx,cy,w,h,s.fills?s.fills[i]:'#14325A',{s:(s.cols2||[])[i]||C.bl,d:i*.25})+`<circle cx="${cx+22}" cy="${cy+24}" r="14" fill="${C.gd}" class="pop" style="--d:${i*.25}s"/>`+t(cx+22,cy+30,i+1,{s:15,c:'#07101F',d:i*.25})+x.split('|').map((l,m)=>t(cx+w/2,cy+62+m*22,l,{s:14,c:m?C.mu:C.fg,w:m?500:700,d:i*.25+.2})).join('')}).join(''))};
+
+D.cal=()=>{const rows=[['15:30','USD',3,'Emploi américain (NFP)','—','—'],['11:00','EUR',2,'Indice de confiance','—','—'],['12:00','GBP',1,'Discours secondaire','—','—'],['20:00','USD',3,'Décision de la banque centrale','—','—']];const col=n=>n===3?C.dn:n===2?'#FF9F43':C.gd;
+ return svg(defs+box(20,30,760,360,'#0F1A30',{s:C.ln,r:12})+['Heure (Mada)','Devise','Impact','Événement (exemples)'].map((h,i)=>t([40,160,250,360][i],64,h,{a:'start',s:14,c:C.mu})).join('')+ln(30,76,770,76,{c:C.ln})+
+ rows.map((r,i)=>{const yy=110+i*70;return t(40,yy,r[0],{a:'start',s:16,d:i*.3})+t(160,yy,r[1],{a:'start',s:16,c:C.bl,d:i*.3})+[0,1,2].map(b=>`<rect x="${250+b*22}" y="${yy-16}" width="16" height="22" rx="3" fill="${b<r[2]?col(r[2]):'#25365A'}" class="pop" style="--d:${i*.3}s"/>`).join('')+t(360,yy,r[3],{a:'start',s:16,d:i*.3})+ln(30,yy+28,770,yy+28,{c:C.ln,dash:'2 6'})}).join('')+
+ t(400,386,'Impact : 3 barres rouges = fort · orange = moyen · jaune = faible (heures d’exemple)',{s:13,c:C.mu,w:500,d:1.8}))};
+
+D.eff=()=>{const E=[[40,47,39,46],[46,55,45,54],[54,56,53,55],[55,66,54,65],[65,74,64,73],[73,75,72,74],[74,85,73,84],[84,93,83,92]],I=[[60,66,56,58],[58,67,55,64],[64,68,57,59],[59,65,54,63],[63,69,56,60],[60,66,55,64],[64,68,58,61],[61,67,56,63]],y=mkY(30,100,90,320);
+ return svg(defs+box(20,20,370,370,'#0F1A30',{s:C.up,r:12})+box(410,20,370,370,'#0F1A30',{s:C.dn,r:12})+t(205,58,'Prix efficace',{s:20,c:C.up})+t(595,58,'Prix inefficace',{s:20,c:C.dn})+series(E,60,40,y,.2,.18,22)+series(I,450,40,y,.2,.18,22)+
+ t(205,350,'Corps larges, petites mèches',{s:14,c:C.mu,w:500,d:1.8})+t(205,372,'Peu de chevauchement : direction claire',{s:14,c:C.up,w:500,d:2})+t(595,350,'Corps petits, grandes mèches',{s:14,c:C.mu,w:500,d:1.8})+t(595,372,'Bougies superposées : bruit',{s:14,c:C.dn,w:500,d:2}))};
+
+D.fvg=()=>{const K=[[40,44,38,43],[43,50,42,49],[49,70,48,68],[68,72,58,70],[70,71,52,55]],y=mkY(30,80,60,350),X=i=>130+i*95;
+ return svg(defs+grid(40,60,770,350,5)+K.map((k,i)=>cd(X(i),k[0],k[1],k[2],k[3],y,36,.2+i*.35)).join('')+
+ `<g class="pop" style="--d:2.2s"><rect x="${X(1)}" y="${y(58)}" width="${770-X(1)}" height="${y(50)-y(58)}" fill="${C.vi}" opacity=".28" stroke="${C.vi}" stroke-width="1.5"/></g>`+
+ ln(X(1)-20,y(50),X(1)+60,y(50),{c:C.gd,dash:'5 4',d:2}) + ln(X(3)-60,y(58),X(3)+20,y(58),{c:C.gd,dash:'5 4',d:2})+
+ t(X(1),388,'Bougie 1',{s:14,c:C.mu,d:.6})+t(X(2),388,'Bougie 2',{s:14,c:C.mu,d:.9})+t(X(3),388,'Bougie 3',{s:14,c:C.mu,d:1.2})+
+ t(60,y(50)+5,'High 1',{a:'start',s:13,c:C.gd,d:2})+t(X(3)+30,y(58)-8,'Low 3',{a:'start',s:13,c:C.gd,d:2})+
+ t(600,y(54)+5,'FVG (vide de prix)',{s:16,c:C.vi,d:2.4})+t(X(2),y(70)-26,'Impulsion forte',{s:15,c:C.up,d:1.2})+t(X(4)+20,y(52)+34,'Retour dans le vide',{s:14,c:C.fg,w:500,d:2.8}))};
+
+window.DIA=D;
+})();
+
+// SMC — Savoir · Maîtriser · Choisir (by Stephen) — plan du programme (niveaux et chapitres de la formation de Stephen)
+// Programme ORIGINAL rédigé à partir du plan "Trading à ma façon" et de l'ordre des chapitres du dossier "Formation trading SMC".
+window.SMC_PLAN = [
+ {id:'BG',t:'Beginner',sub:'Comprendre le trading, le marché, la plateforme et lire une bougie',lessons:['BG1 Introduction : qu’est-ce que le trading, vraiment ?','BG2 Configurer TradingView','BG3 Devises et paires de devises','BG4 Acheter et vendre (Buy / Sell)','BG5 Les types de traders','BG6 Les pips','BG7 Brokers, levier (leverage) et marge (margin)','BG8 Les types d’ordres','BG9 Spread, bid price et ask price','BG10 Les lots','BG11 MetaTrader 5','BG12 Anatomie d’une bougie (candlestick)','BG13 Les unités de temps (timeframes)','BG14 Le développement des bougies','BG15 La loi de l’offre et de la demande','BG16 Banques contre particuliers (Bank vs Retail)','BG17 Les fractals','BG18 Ta routine et tes objectifs de débutant','BG19 La stratégie débutant de Stephen']},
+ {id:'IM',t:'Intermediate',sub:'Lire la structure et la liquidité : où va le prix, et pourquoi',lessons:['IM1 La structure du marché','IM2 Retracements et continuations','IM3 Break of structure (BOS)','IM4 Les ranges de structure','IM5 Structure complexe et structure interne','IM6 Casser une structure complexe','IM7 Change of character (CHoCH)','IM8 Corrélation des unités de temps','IM9 Premium et discount','IM10 La consolidation','IM11 La liquidité','IM12 Le liquidity sweep','IM13 Accumulation, distribution et expansion','IM14 La force de la liquidité','IM15 L’inducement structurel','IM16 L’inducement de structure interne','IM17 Fair value gap (FVG)','IM18 Efficient price action']},
+ {id:'AD',t:'Advanced',sub:'Zones, order blocks, sessions et techniques d’entrée',lessons:['AD1 Zones de demande et d’offre (demand / supply)','AD2 Demand et supply flips','AD3 Les order blocks','AD4 La mitigation d’un order block','AD5 L’extreme order block','AD6 Les continuation order blocks','AD7 Les breaker blocks','AD8 Les banker blocks','AD9 Les points d’intérêt (POI)','AD10 Les POI avancés','AD11 Raffiner un order block','AD12 L’order flow','AD13 Faux order blocks et order flow','AD14 Les fundamentals','AD15 Les sessions de marché','AD16 Les variations du cycle de la session d’Asie','AD17 Previous day high et low','AD18 Les techniques d’entrée']},
+ {id:'MG',t:'Management',sub:'Risque, probabilités, plan, journal, mental et passage au réel',lessons:['MG1 Le risk management','MG2 Le risk to reward','MG3 Profitabilité et probabilité','MG4 Le plan de trading en 10 questions (checklist)','MG5 Confirmation d’entrée','MG6 Stop loss, take profit et ratio R/R réel','MG7 Taille de position et gestion de compte','MG8 Le journal de trading','MG9 Psychologie : discipline, perte, patience','MG10 Backtest puis démo suivie (semaines pratiques)','MG11 Passer au réel : règles et limites','MG12 Devenir ton propre système']},
+ {id:'OUT',t:'Boîte à outils',sub:'À quoi sert chaque site, et comment s’en servir',lessons:['OUT1 TradingView : analyser','OUT2 Investing.com : calendrier économique','OUT3 Binance : cryptos, ce que c’est et ses limites','OUT4 MetaTrader 5 : exécuter','OUT5 Choisir un broker (sans affiliation)']}
+];
+
+(window.SMC_L=window.SMC_L||[]).push(...[{"id": "AD1", "lv": "AD", "t": "Zones de demande et d’offre (demand / supply)", "min": 30, "obj": "Tracer une zone de demande ou d’offre propre à partir d’un fort départ du prix, et juger sa qualité."}, {"id": "AD2", "lv": "AD", "t": "Demand et supply flips", "min": 25, "obj": "Comprendre qu’une zone cassée change de rôle : une offre devient demande et inversement."}, {"id": "AD3", "lv": "AD", "t": "Les order blocks", "min": 35, "obj": "Identifier un order block, comprendre son origine et le tracer correctement."}, {"id": "AD4", "lv": "AD", "t": "La mitigation d’un order block", "min": 25, "obj": "Comprendre ce qu’est la mitigation et comment le retour dans l’OB sert d’entrée."}, {"id": "AD5", "lv": "AD", "t": "L’extreme order block", "min": 25, "obj": "Reconnaître l’OB extrême, celui qui se trouve au plus haut ou plus bas du mouvement et qui protège la structure."}, {"id": "AD6", "lv": "AD", "t": "Les continuation order blocks", "min": 25, "obj": "Utiliser les OB de continuation, formés pendant la tendance, pour y rejoindre le mouvement."}, {"id": "AD7", "lv": "AD", "t": "Les breaker blocks", "min": 25, "obj": "Savoir ce qu’est un breaker block (variante avancée de l’OB de continuation) et pourquoi il est « à connaître » sans être indispensable."}, {"id": "AD8", "lv": "AD", "t": "Les banker blocks", "min": 25, "obj": "Savoir ce qu’est un banker block (OB sans nouveau sommet/creux) et pourquoi il reste « juste à savoir »."}, {"id": "AD9", "lv": "AD", "t": "Les points d’intérêt (POI)", "min": 30, "obj": "Choisir tes POI : les zones précises où tu attends le prix, en privilégiant OB extrêmes et OB de continuation."}, {"id": "AD10", "lv": "AD", "t": "Les POI avancés", "min": 25, "obj": "Comprendre le POI avancé (zone de liquidité), pourquoi il est à haut risque et à faible probabilité."}, {"id": "AD11", "lv": "AD", "t": "Raffiner un order block", "min": 30, "obj": "Réduire la taille d’un OB (OB dans l’OB, ou moitié de l’OB) pour minimiser le risque sans tomber dans la sur-raffinement."}, {"id": "AD12", "lv": "AD", "t": "L’order flow", "min": 25, "obj": "Lire le flux d’ordres : une suite d’OB respectés dans le même sens, et savoir qu’il n’existe pas en consolidation."}, {"id": "AD13", "lv": "AD", "t": "Faux order blocks et order flow", "min": 25, "obj": "Repérer les faux OB et le faux order flow : les pièges qui ressemblent à un setup parfait."}, {"id": "AD14", "lv": "AD", "t": "Les fundamentals", "min": 20, "obj": "Utiliser les fundamentals à court terme (annonces) pour savoir quand ne pas trader."}, {"id": "AD15", "lv": "AD", "t": "Les sessions de marché", "min": 30, "obj": "Connaître les sessions Asie, Londres et New York, leurs horaires à Madagascar et ce qu’elles font au prix."}, {"id": "AD16", "lv": "AD", "t": "Les variations du cycle de la session d’Asie", "min": 30, "obj": "Utiliser le range d’Asie comme source de liquidité et reconnaître les 3 variations du cycle après l’Asie."}, {"id": "AD17", "lv": "AD", "t": "Previous day high et low", "min": 25, "obj": "Utiliser le plus haut et le plus bas de la veille comme liquidité, cibles et zones de sweep."}, {"id": "AD18", "lv": "AD", "t": "Les techniques d’entrée", "min": 35, "obj": "Choisir parmi les 6 techniques d’entrée et un stop conservateur ou agressif, sans entrer quand le marché ne donne pas de signal."}, {"id": "BG1", "lv": "BG", "t": "Introduction : qu’est-ce que le trading, vraiment ?", "min": 25, "obj": "Comprendre ce qu’est réellement le trading, ce qu’il n’est pas, et décider en connaissance de cause de te lancer."}, {"id": "BG2", "lv": "BG", "t": "Configurer TradingView", "min": 25, "obj": "Ouvrir un compte gratuit, afficher une paire en bougies, régler le fuseau horaire de Madagascar et sauvegarder ton espace de travail."}, {"id": "BG3", "lv": "BG", "t": "Devises et paires de devises", "min": 25, "obj": "Lire une paire comme EUR/USD, distinguer devise de base et devise de cotation, et connaître les familles de paires."}, {"id": "BG4", "lv": "BG", "t": "Acheter et vendre (Buy / Sell)", "min": 25, "obj": "Comprendre qu’on peut gagner à la hausse (Buy) comme à la baisse (Sell) et lire le résultat d’un trade."}, {"id": "BG5", "lv": "BG", "t": "Les types de traders", "min": 20, "obj": "Distinguer scalper, day trader, swing trader et position trader pour choisir un style compatible avec ta vie."}, {"id": "BG6", "lv": "BG", "t": "Les pips", "min": 30, "obj": "Mesurer un mouvement en pips, calculer la valeur d’un pip et prévoir un gain ou une perte."}, {"id": "BG7", "lv": "BG", "t": "Brokers, levier (leverage) et marge (margin)", "min": 30, "obj": "Comprendre le rôle du broker, ce que le levier amplifie (gains comme pertes) et ce qu’est la marge."}, {"id": "BG8", "lv": "BG", "t": "Les types d’ordres", "min": 30, "obj": "Distinguer ordre au marché, limit et stop, et savoir quand utiliser chacun avec un SL et un TP."}, {"id": "BG9", "lv": "BG", "t": "Spread, bid price et ask price", "min": 25, "obj": "Comprendre qu’il y a deux prix (bid et ask), que l’écart est un coût et comment il affecte tes trades."}, {"id": "BG10", "lv": "BG", "t": "Les lots", "min": 30, "obj": "Choisir une taille de position (lot) en fonction de ton risque, avec un simulateur étape par étape."}, {"id": "BG11", "lv": "BG", "t": "MetaTrader 5", "min": 30, "obj": "Installer MetaTrader 5, ouvrir un compte démo, ouvrir et fermer une position."}, {"id": "BG12", "lv": "BG", "t": "Anatomie d’une bougie (candlestick)", "min": 30, "obj": "Lire une bougie : ouverture, clôture, plus haut, plus bas, corps et mèches, et ce qu’elles racontent."}, {"id": "BG13", "lv": "BG", "t": "Les unités de temps (timeframes)", "min": 25, "obj": "Choisir les bons timeframes, passer du grand au petit et comprendre qu’une même période est visible à différentes échelles."}, {"id": "BG14", "lv": "BG", "t": "Le développement des bougies", "min": 25, "obj": "Comprendre comment une bougie se construit au fil du temps et pourquoi elle change tant qu’elle n’est pas clôturée."}, {"id": "BG15", "lv": "BG", "t": "La loi de l’offre et de la demande", "min": 30, "obj": "Comprendre comment le déséquilibre entre acheteurs et vendeurs fait bouger le prix et créer des zones."}, {"id": "BG16", "lv": "BG", "t": "Banques contre particuliers (Bank vs Retail)", "min": 25, "obj": "Comprendre qui sont les grands acteurs du marché, pourquoi ils bougent le prix et comment le particulier doit s’y adapter."}, {"id": "BG17", "lv": "BG", "t": "Les fractals", "min": 20, "obj": "Repérer un fractal, comprendre qu’un même schéma se répète à toutes les échelles."}, {"id": "BG18", "lv": "BG", "t": "Ta routine et tes objectifs de débutant", "min": 25, "obj": "Construire une routine réaliste de 10 à 20 minutes par jour et fixer des objectifs d’apprentissage et de risque."}, {"id": "BG19", "lv": "BG", "t": "La stratégie débutant de Stephen", "min": 30, "obj": "Appliquer une stratégie simple et complète : tendance claire, zone propre, signal clair, entrée sur retest, SL/TP simples."}, {"id": "IM1", "lv": "IM", "t": "La structure du marché", "min": 30, "obj": "Lire la structure : sommets et creux, tendance haussière ou baissière, et savoir dire dans quel sens le marché se dirige."}, {"id": "IM2", "lv": "IM", "t": "Retracements et continuations", "min": 30, "obj": "Distinguer le mouvement impulsif du retracement, et comprendre qu’un retracement n’est pas forcément un retournement."}, {"id": "IM3", "lv": "IM", "t": "Break of structure (BOS)", "min": 30, "obj": "Reconnaître une cassure de structure (BOS) valide, qui confirme la continuation de la tendance."}, {"id": "IM4", "lv": "IM", "t": "Les ranges de structure", "min": 25, "obj": "Reconnaître un range, ses bornes et son équilibre, et savoir pourquoi on évite d’y trader au milieu."}, {"id": "IM5", "lv": "IM", "t": "Structure complexe et structure interne", "min": 30, "obj": "Distinguer la structure externe (grande) de la structure interne (petite) et lire une structure complexe."}, {"id": "IM6", "lv": "IM", "t": "Casser une structure complexe", "min": 25, "obj": "Comprendre ce qui fait qu’une structure complexe est vraiment cassée et pourquoi on attend la confirmation."}, {"id": "IM7", "lv": "IM", "t": "Change of character (CHoCH)", "min": 30, "obj": "Reconnaître le premier signe d’un possible retournement : le CHoCH, et le distinguer du BOS."}, {"id": "IM8", "lv": "IM", "t": "Corrélation des unités de temps", "min": 25, "obj": "Aligner HTF et LTF : prendre la direction sur le grand timeframe et l’entrée sur le petit."}, {"id": "IM9", "lv": "IM", "t": "Premium et discount", "min": 25, "obj": "Découper un mouvement en zones premium et discount pour acheter bas et vendre haut."}, {"id": "IM10", "lv": "IM", "t": "La consolidation", "min": 25, "obj": "Reconnaître une consolidation, ce qu’elle prépare et comment éviter ses pièges."}, {"id": "IM11", "lv": "IM", "t": "La liquidité", "min": 30, "obj": "Comprendre ce qu’est la liquidité, où elle se cache et pourquoi le prix va la chercher."}, {"id": "IM12", "lv": "IM", "t": "Le liquidity sweep", "min": 30, "obj": "Reconnaître un sweep (balayage), le distinguer d’une vraie cassure et l’utiliser comme confirmation."}, {"id": "IM13", "lv": "IM", "t": "Accumulation, distribution et expansion", "min": 30, "obj": "Comprendre le cycle accumulation → manipulation → distribution → expansion et le repérer sur un graphique."}, {"id": "IM14", "lv": "IM", "t": "La force de la liquidité", "min": 25, "obj": "Distinguer la liquidité mineure, intermédiaire et majeure, et comprendre pourquoi toutes ne valent pas la même chose."}, {"id": "IM15", "lv": "IM", "t": "L’inducement structurel", "min": 30, "obj": "Reconnaître un inducement, le petit piège qui attire les débutants avant le vrai mouvement."}, {"id": "IM16", "lv": "IM", "t": "L’inducement de structure interne", "min": 25, "obj": "Utiliser l’inducement à l’intérieur d’une structure interne pour affiner une entrée."}, {"id": "IM17", "lv": "IM", "t": "Fair value gap (FVG)", "min": 30, "obj": "Identifier un FVG, comprendre pourquoi le prix y revient et comment l’utiliser avec prudence."}, {"id": "IM18", "lv": "IM", "t": "Efficient price action", "min": 25, "obj": "Distinguer un prix « efficace » (mouvement propre) d’un prix « inefficace » (mouvement heurté) et ce que cela implique."}, {"id": "MG1", "lv": "MG", "t": "Le risk management", "min": 30, "obj": "Fixer ton risque par trade, comprendre pourquoi 1 % protège ton capital et planifier tes retraits de gains."}, {"id": "MG2", "lv": "MG", "t": "Le risk to reward", "min": 25, "obj": "Calculer le ratio risque/gain (R/R) d’un trade et ne jamais risquer plus que tu ne vises de gagner."}, {"id": "MG3", "lv": "MG", "t": "Profitabilité et probabilité", "min": 30, "obj": "Comprendre qu’avec un bon R/R tu peux perdre plus de trades que tu n’en gagnes et rester rentable, et calculer le taux de réussite nécessaire."}, {"id": "MG12", "lv": "MG", "t": "Devenir ton propre système", "min": 25, "obj": "Conclure le programme : construire ton plan personnel, ta routine et ta méthode d’amélioration continue."}, {"id": "MG4", "lv": "MG", "t": "Le plan de trading en 10 questions (checklist)", "min": 16, "obj": "Passer chaque trade au crible d’une checklist de 10 questions avant d’appuyer sur le bouton."}, {"id": "MG5", "lv": "MG", "t": "Confirmation d’entrée", "min": 14, "obj": "Attendre que le prix touche la zone, puis une cassure de structure en basse unité avant d’entrer."}, {"id": "MG6", "lv": "MG", "t": "Stop loss, take profit et ratio R/R réel", "min": 16, "obj": "Placer le stop là où l’idée est invalidée, viser une cible logique et calculer le vrai R/R en comptant le spread."}, {"id": "MG7", "lv": "MG", "t": "Taille de position et gestion de compte", "min": 16, "obj": "Calculer le lot, limiter le risque total du jour et éviter de doubler son risque sans le savoir."}, {"id": "MG8", "lv": "MG", "t": "Le journal de trading", "min": 14, "obj": "Tenir un journal qui permet de mesurer ses résultats en R et de calculer son espérance."}, {"id": "MG9", "lv": "MG", "t": "Psychologie : discipline, perte, patience", "min": 14, "obj": "Reconnaître le FOMO, la revanche et le sur-trading, et se donner des garde-fous concrets."}, {"id": "MG10", "lv": "MG", "t": "Backtest puis démo suivie (semaines pratiques)", "min": 16, "obj": "Tester son plan sur le passé puis en démo suivie, avec des critères clairs avant de penser au réel."}, {"id": "MG11", "lv": "MG", "t": "Passer au réel : règles et limites", "min": 14, "obj": "Savoir quand et comment passer au compte réel avec un risque minimal, sans se mettre en danger."}, {"id": "OUT1", "lv": "OUT", "t": "TradingView : analyser", "min": 14, "obj": "Utiliser TradingView pour analyser confortablement : zones, outil de position, fuseau horaire et relecture."}, {"id": "OUT2", "lv": "OUT", "t": "Investing.com : calendrier économique", "min": 12, "obj": "Lire un calendrier économique, le régler sur ton fuseau et éviter les annonces à fort impact."}, {"id": "OUT3", "lv": "OUT", "t": "Binance : cryptos, ce que c’est et ses limites", "min": 14, "obj": "Comprendre ce qu’est une plateforme d’échange de cryptomonnaies, ses différences avec un broker Forex et ses risques."}, {"id": "OUT4", "lv": "OUT", "t": "MetaTrader 5 : exécuter", "min": 16, "obj": "Passer des ordres à cours limité ou stop, gérer une position (break-even, clôture partielle) et exporter son historique."}, {"id": "OUT5", "lv": "OUT", "t": "Choisir un broker (sans affiliation)", "min": 14, "obj": "Comparer des brokers avec des critères objectifs, repérer les signaux d’alerte et tester les retraits."}]);
+// SMC by Stephen — moteur de cours : accueil, diaporama pas à pas, fiche imprimable, QCM, test de passage
+(function(){
+const $=(s,r=document)=>r.querySelector(s),D=window.DIA;
+const LS={get(k,d){try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+const DONE=LS.get('smc_done',{}),USED=LS.get('smc_used',{});
+const shuf=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
+const esc=s=>String(s).replace(/&(?!amp;)/g,'&amp;');
+function lessons(){return (window.SMC_L||[]).map(l=>({...l,fam:(l.fam||[]).map((v,i)=>({w:(l.why||[])[i]||'',v}))}))}
+let L=[];
+let S=null;
+const ROLE=()=>{try{return localStorage.getItem('smc_role')||'eleve'}catch(e){return 'eleve'}};const isCoach=()=>ROLE()==='coach';
+const NAME=()=>{try{return localStorage.getItem('smc_name')||''}catch(e){return ''}};
+const who=()=>(($('#who')?.value||NAME()||'Élève').trim())+' · usage personnel';
+const LOGO=(z=40)=>`<svg class="logo" width="${z}" height="${z}" viewBox="0 0 64 64"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4C9AFF"/><stop offset="1" stop-color="#F0B90B"/></linearGradient></defs><path d="M32 3 57 17.500v29L32 61 7 46.500v-29z" fill="#0B1220" stroke="url(#lg)" stroke-width="3"/><g stroke-width="3" stroke-linecap="round"><path d="M20 20v24" stroke="#F6465D"/><rect x="16" y="26" width="8" height="12" fill="#F6465D" stroke="none"/><path d="M32 14v34" stroke="#2EBD85"/><rect x="28" y="20" width="8" height="18" fill="#2EBD85" stroke="none"/><path d="M44 16v28" stroke="#2EBD85"/><rect x="40" y="18" width="8" height="12" fill="#2EBD85" stroke="none"/></g></svg>`;
+const BRAND=(z=40)=>`<span class="brand">${LOGO(z)}<span><b>SMC</b> <i>by Stephen</i><small>Savoir · Maîtriser · Choisir</small></span></span>`;
+const wmk=()=>`<div class="wlogo">${LOGO(520)}</div><div class="wmk">${Array(70).fill(`<span>${who()}</span>`).join('')}</div>`;
+
+/* ---------- accueil ---------- */
+const EXL={BG:'Examen final Beginner',IM:'Test de passage vers Advanced',AD:'Test de passage vers Management',MG:'Évaluation finale du programme',OUT:'Test de la boîte à outils'};
+function home(){L=lessons();const m=$('#m');if(window.PF&&PF.gate&&!PF.gate())return;PF&&PF.sync&&PF.sync(DONE);const ok=L.filter(l=>DONE[l.id]).length;
+ m.innerHTML=`${NAME()?`<div class="hello">Bonjour <b>${NAME()}</b> 👋 — ton espace de formation</div>`:''}<div class="lv">Progression globale</div><div class="bar"><i style="width:${ok/L.length*100}%"></i></div><div class="sub" style="margin:0">${ok} / ${L.length} leçons validées (diaporama + fiche + QCM réussi)</div>`+
+ SMC_PLAN.map(P=>{const ord=P.lessons.map(x=>x.split(' ')[0]);const ls=L.filter(l=>l.lv===P.id).sort((x,y)=>ord.indexOf(x.id)-ord.indexOf(y.id));const k=ls.filter(l=>DONE[l.id]).length;return `<div class="lv">${P.t} · ${k}/${ls.length}</div><div class="sub" style="margin:-4px 0 2px">${P.sub}</div>`+ls.map((l,i)=>`<div class="lec ${DONE[l.id]?'ok':''}"><div class="n">${DONE[l.id]?'✓':i+1}</div><div class="t"><b>${l.t}</b><small>${l.obj}</small></div><span class="sub" style="margin:0">${l.min} min</span>${window.PF&&!PF.canOpen(l)?`<button class="g" data-a="lock" data-id="${l.id}">🔒 Demander l’accès</button>`:`<button data-a="deck" data-id="${l.id}">▶ Cours</button>`}${window.PF&&!PF.canOpen(l)?'':`<button class="g" data-a="fiche" data-id="${l.id}">📄 Ma fiche (PDF)</button>`}${isCoach()?`<button class="g" data-a="form" data-id="${l.id}">🎙 Fiche formateur</button>`:''}${window.PF&&!PF.canOpen(l)?'':`<button class="g" data-a="quiz" data-id="${l.id}">QCM</button>`}</div>`).join('')+`<div class="lec exam"><div class="n">🎯</div><div class="t"><b>${EXL[P.id]}</b><small>Examen de 20 questions tirées de ce niveau · réussite à 80 % · à chaque tentative, des questions différentes. Réussi sans suivre les cours = passage direct (placement).</small></div><button data-a="exam" data-lv="${P.id}">Passer le test ${DONE['EX_'+P.id]?'✓':''}</button></div>`}).join('')+
+ `<div class="risk">⚠ Le trading comporte un risque de perte. Aucun gain n’est garanti, le marché est imprévisible et l’expérience est nécessaire. Cette formation est éducative.</div>`;
+ m.querySelectorAll('button[data-a]').forEach(b=>b.onclick=()=>{const a=b.dataset.a,l=L.find(x=>x.id===b.dataset.id);const run=()=>a==='lock'?PF.view('espace'):a==='deck'?deck(l):a==='fiche'?fiche(l):a==='form'?formateur(l):a==='quiz'?quizOnly(l):exam(b.dataset.lv);if(!window.PF||a==='lock')return run();const pr=a==='exam'?PF.loadLevel(b.dataset.lv):PF.load(l);b.disabled=true;const tx=b.textContent;b.textContent='Chargement…';pr.then(()=>{b.disabled=false;b.textContent=tx;run()}).catch(e=>{b.disabled=false;b.textContent=tx;alert(e.message||e)})})}
+
+/* ---------- diaporama ---------- */
+function cover(l){let s=1234,r=()=>(s=(s*9301+49297)%233280)/233280,p=50,out='';for(let i=0;i<34;i++){const o=p,c=o+(r()-.47)*14,h=Math.max(o,c)+r()*7,lo=Math.min(o,c)-r()*7;p=c;const y=v=>360-v*3.2,col=c>=o?'#2EBD85':'#F6465D',x=30+i*24;out+=`<g class="pop" style="--d:${i*.05}s"><line x1="${x}" x2="${x}" y1="${y(h)}" y2="${y(lo)}" stroke="${col}" stroke-width="3"/><rect x="${x-7}" y="${y(Math.max(o,c))}" width="14" height="${Math.max(2,Math.abs(y(o)-y(c)))}" fill="${col}"/></g>`}return `<div class="cvbg"><svg viewBox="0 0 860 400" class="svg" preserveAspectRatio="xMidYMax slice">${out}</svg></div>`}
+function ul(a,cls='b'){return `<ul>${a.map(x=>`<li class="${cls} rv">${x}</li>`).join('')}</ul>`}
+function slidesOf(l){return [{k:'cov'},...l.slides,{k:'ex'},{k:'rec'},{k:'quiz'}]}
+function render(s,l){
+ const dia=x=>x.html||(typeof D[x.d]==='function'?D[x.d](x.a):'');
+ switch(s.k){
+ case'cov':return `${cover(l)}<div class="cov"><div style="margin-bottom:10px">${BRAND(46)}</div><div class="eye">${(window.SMC_PLAN.find(p=>p.id===l.lv)||{}).t||''}</div><h2>${l.t}</h2><p>${l.obj}</p><div style="margin-top:14px"><span class="chip">⏱ ${l.min} min</span><span class="chip">🧪 exercice pratique</span><span class="chip">✅ QCM de validation</span><span class="chip">📄 fiche écrite</span></div></div>`;
+ case't':return `<h2>${s.h}</h2>${ul(s.b)}${s.rule?`<div class="rule rv"><small>${s.rt||'RÈGLE'}</small>${s.rule}</div>`:''}`;
+ case'dia':return `<div class="eye">${s.eye||l.t}</div><h2>${s.h}</h2><div class="dl"><div class="dia">${dia(s)}</div><div class="side">${s.items?ul(s.items,''):''}</div></div>${s.rule?`<div class="rule ${s.rc||''} rv"><small>${s.rt||'À RETENIR'}</small>${s.rule}</div>`:''}`;
+ case'sess':return `<div class="eye">${l.t}</div><h2>${s.h}</h2><div class="seg" id="seg"><button data-s="auto" class="on">Aujourd’hui</button><button data-s="w" class="g">Hiver US</button><button data-s="s" class="g">Été US</button></div><div class="dl"><div class="dia" id="sdia">${D.sessions('auto')}</div><div class="side">${ul(s.items,'')}</div></div>${s.rule?`<div class="rule rv"><small>À RETENIR</small>${s.rule}</div>`:''}`;
+ case'pred':return `<div class="eye">À toi de jouer · prédis avant de voir</div><h2>${s.h}</h2><div class="pred"><div class="q">${s.q}</div>${s.dia?`<div class="dia" style="margin-top:12px">${dia(s.dia)}</div>`:''}<div class="ans rv"><b>Réponse :</b> ${s.a}${s.why?`<br><small style="color:var(--mu)">${s.why}</small>`:''}</div></div>`;
+ case'term':return `<div class="eye">Le mot à maîtriser · ${s.i}/${s.tot}</div><div class="term"><div class="tt rv">${s.t}</div><div class="td rv"><small>EN CLAIR</small>${s.d}</div><div class="te rv"><small>EXEMPLE</small>${s.e}</div></div>${s.rule?`<div class="rule rv"><small>${s.rt||'À RETENIR'}</small>${s.rule}</div>`:''}`;
+ case'sim':return `<div class="eye">Simulateur guidé · change les chiffres, lis les étapes</div><h2>${s.h}</h2>${simHTML(s.c)}`;
+ case'calc':return `<div class="eye">Outil interactif</div><h2>${s.h}</h2>${calcHTML(s.c)}`;
+ case'warn':return `<h2>⚠ ${s.h}</h2><div class="rule dn" style="margin:0"><ul>${s.b.map(x=>`<li class="b rv">${x}</li>`).join('')}</ul></div>`;
+ case'cmp':return `<h2>${s.h}</h2><div class="cmp"><div><h3>${s.l[0]}</h3>${ul(s.l[1])}</div><div><h3>${s.r[0]}</h3>${ul(s.r[1])}</div></div>`;
+ case'big':return `<div class="big"><h2>${s.h}</h2><div class="n">${s.n}</div><p>${s.s}</p></div>`;
+ case'table':return `<h2>${s.h}</h2><table><tr>${s.cols.map(c=>`<th>${c}</th>`).join('')}</tr>${s.rows.map((r,n)=>`<tr style="animation-delay:${.2+n*.15}s">${r.map(c=>`<td>${c}</td>`).join('')}</tr>`).join('')}</table><div class="note">${s.note||''}</div>`;
+ case'ex':return `<div class="eye">À faire sur ${l.exl||'MetaTrader 5'} · exercice réel</div><h2>${l.ex.h}</h2><div class="dl"><div><ul class="ex">${l.ex.st.map(x=>`<li class="rv">${x}</li>`).join('')}</ul><div class="proof rv">📸 <b>Preuve</b> à envoyer à ton coach : ${l.ex.pr}<br><small>Elle reste visible 7 jours pour ton coach, puis elle est supprimée.</small></div></div>${l.exd?`<div class="dia">${D[l.exd](l.exa)}</div>`:''}</div>`;
+ case'rec':return `<div class="eye">Récap · ce que tu dois savoir refaire seul</div><h2>À retenir</h2>${ul(l.rec)}<div class="rule up rv"><small>ÉTAPE SUIVANTE</small>Ouvre la fiche écrite (touche F), puis passe le QCM pour valider la leçon.</div>`;
+ }return''}
+const SIMS={
+pips:{f:[['p1','Prix d’entrée',1.0850,.0001],['p2','Prix de sortie',1.0890,.0001],['lt','Lot (0,01 = micro-lot)',0.10,.01]],steps:v=>{const d=v.p2-v.p1,pips=Math.round(d*10000*10)/10,pv=10*v.lt,g=pips*pv;return [['1','Différence de prix',`${v.p2.toFixed(4)} − ${v.p1.toFixed(4)} = ${d.toFixed(4)}`],['2','Convertir en pips (1 pip = 0,0001)',`${d.toFixed(4)} ÷ 0,0001 = <b>${pips} pips</b>`],['3','Valeur d’un pip pour ton lot',`10 $ × ${v.lt} lot = <b>${pv.toFixed(2)} $</b> par pip`],['4','Résultat (si tu as acheté)',`${pips} pips × ${pv.toFixed(2)} $ = <b class="${g>=0?'gu':'gd'}">${g.toFixed(2)} $</b>`],['5','Si tu avais vendu',`le signe s’inverse : <b>${(-g).toFixed(2)} $</b>`]]}},
+lots:{f:[['cap','Capital ($)',1000,10],['rk','Risque par trade (%)',1,.25],['sl','Stop loss (pips)',20,1]],steps:v=>{const r=v.cap*v.rk/100,pv=r/v.sl,lot=Math.floor(pv/10*100)/100;return [['1','Argent que tu acceptes de perdre',`${v.cap} $ × ${v.rk} % = <b>${r.toFixed(2)} $</b>`],['2','Combien par pip au maximum ?',`${r.toFixed(2)} $ ÷ ${v.sl} pips = <b>${pv.toFixed(2)} $ par pip</b>`],['3','Convertir en lot (1 lot ≈ 10 $ par pip sur EUR/USD)',`${pv.toFixed(2)} ÷ 10 = <b>${lot.toFixed(2)} lot</b> (arrondi vers le bas)`],['4','Vérification',`${lot.toFixed(2)} lot × 10 $ × ${v.sl} pips = <b>${(lot*10*v.sl).toFixed(2)} $</b> de perte si le stop est touché`]]}},
+rr:{f:[['sl','Stop loss (pips)',20,1],['tp','Take profit (pips)',40,1],['sp','Spread (pips)',2,.1],['wr','Taux de réussite (%)',40,1]],steps:v=>{const R=v.tp/v.sl,Rr=(v.tp-v.sp)/(v.sl+v.sp),be=100/(1+Rr),ex=v.wr/100*Rr-(1-v.wr/100);return [['1','Ratio théorique',`${v.tp} ÷ ${v.sl} = <b>1:${R.toFixed(2)}</b>`],['2','Ratio réel (avec spread)',`(${v.tp} − ${v.sp}) ÷ (${v.sl} + ${v.sp}) = <b>1:${Rr.toFixed(2)}</b>`],['3','Taux de réussite pour être à zéro',`1 ÷ (1 + ${Rr.toFixed(2)}) = <b>${be.toFixed(1)} %</b>`],['4','Espérance par trade (en R)',`${v.wr} % × ${Rr.toFixed(2)} − ${(100-v.wr)} % × 1 = <b class="${ex>=0?'gu':'gd'}">${ex>=0?'+':''}${ex.toFixed(2)} R</b>`]]}}};
+function simHTML(c){const S0=SIMS[c];return `<div class="sim"><div class="f">${S0.f.map(x=>`<label>${x[1]}<input id="${x[0]}" type="number" value="${x[2]}" step="${x[3]}"></label>`).join('')}</div><ol class="sst" id="sst"></ol></div>`}
+function bindSim(c){const S0=SIMS[c];const u=()=>{const v={};S0.f.forEach(x=>v[x[0]]=+($('#'+x[0])?.value)||0);$('#sst').innerHTML=S0.steps(v).map(r=>`<li><span class="sn">${r[0]}</span><div><b>${r[1]}</b><br>${r[2]}</div></li>`).join('')};S0.f.forEach(x=>$('#'+x[0])?.addEventListener('input',u));u()}
+function calcHTML(c){return c==='lot'?`<div class="calc"><div class="f"><label>Capital du compte ($)<input id="c1" type="number" value="1000"></label><label>Risque par trade (%)<input id="c2" type="number" value="1" step=".25"></label><label>Stop loss (pips)<input id="c3" type="number" value="20"></label><label>Valeur du pip pour 1 lot ($) — EUR/USD ≈ 10<input id="c4" type="number" value="10"></label></div><div class="res"><div class="sub">Lot à utiliser</div><div class="v" id="r1">0,05</div><div id="r2" class="sub"></div></div></div>`:`<div class="calc"><div class="f"><label>Lot<input id="c1" type="number" value="0.01" step="0.01"></label><label>Mouvement (pips)<input id="c3" type="number" value="40"></label><label>Valeur du pip pour 1 lot ($) — EUR/USD ≈ 10<input id="c4" type="number" value="10"></label></div><div class="res"><div class="sub">Gain ou perte</div><div class="v" id="r1">4,00 $</div><div id="r2" class="sub">Formule : lot × pips × valeur du pip (1 lot)</div></div></div>`}
+function bindCalc(c){const g=i=>+($('#'+i)?.value)||0,f=n=>n.toFixed(2).replace('.',',');const u=()=>{if(c==='lot'){const risk=g('c1')*g('c2')/100,pv=g('c3')*g('c4');const lot=pv?risk/pv:0;$('#r1').textContent=f(Math.floor(lot*100)/100)+' lot';$('#r2').textContent='Risque : '+f(risk)+' $ · arrondis toujours vers le bas, puis vérifie dans MT5.'}else{$('#r1').textContent=f(g('c1')*g('c3')*g('c4'))+' $'}};['c1','c2','c3','c4'].forEach(i=>$('#'+i)?.addEventListener('input',u));u()}
+function deck(l){S={l,s:slidesOf(l),i:0,r:0,q:null};const d=document.createElement('div');d.className='dk';d.innerHTML=`<div class="dk-prog"><i></i></div><div class="dk-st"><div class="dk-v"></div></div><div class="dk-bar"><button class="g" id="pv">‹</button><span id="ct" class="sub" style="margin:0"></span><button id="nx">Suivant ›</button><button class="g" id="fc">📄 Ma fiche</button><button class="g" id="cl">✕</button></div>${wmk()}`;document.body.appendChild(d);S.el=d;
+ $('#pv',d).onclick=prev;$('#nx',d).onclick=next;$('#cl',d).onclick=close;$('#fc',d).onclick=()=>fiche(l);
+ S.key=e=>{if($('.fiche')){if(e.key==='Escape')$('.fiche').remove();return}if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();next()}else if(e.key==='ArrowLeft')prev();else if(e.key==='Escape')close();else if(e.key==='f'||e.key==='F')fiche(l);else if((e.key==='p'||e.key==='P')&&isCoach())presenter()};document.addEventListener('keydown',S.key);go(0)}
+function close(){if(!S)return;document.removeEventListener('keydown',S.key);S.el.remove();S=null;home()}
+function revs(){return S.el.querySelectorAll('.dk-v .rv')}
+function showR(n){S.r=n;revs().forEach((e,i)=>e.classList.toggle('on',i<n))}
+function next(){const n=revs().length;if(S.r<n)showR(S.r+1);else go(S.i+1)}
+function prev(){if(S.r>1)showR(S.r-1);else go(S.i-1,true)}
+function go(i,back){if(i<0||i>=S.s.length)return;S.i=i;const s=S.s[i],v=$('.dk-v',S.el);v.style.animation='none';v.offsetHeight;v.style.animation='';
+ if(s.k==='quiz'){S.q=null;runQuiz(v,S.l,S.l.fam,{pass:.75,done:()=>{DONE[S.l.id]=1;LS.set('smc_done',DONE)},label:'Leçon validée'});}else{v.innerHTML=render(s,S.l);if(s.k==='calc')bindCalc(s.c);if(s.k==='sim')bindSim(s.c);if(s.k==='sess')bindSess(v);const n=revs().length;showR(back?n:Math.min(1,n))}
+ $('#ct',S.el).textContent=`${i+1} / ${S.s.length}`;pushNotes();$('.dk-prog i',S.el).style.width=(i+1)/S.s.length*100+'%';const nx=$('#nx',S.el);nx.textContent=i===S.s.length-1?'':'Suivant ›';nx.style.display=i===S.s.length-1?'none':''}
+const NOTE=(s,l)=>s.k==='cov'?`Accueille l’élève par son prénom. Annonce l’objectif : « ${l.obj} ». Précise la durée (${l.min} min) et que la leçon se termine par un exercice, une fiche et un QCM.`:s.k==='ex'?'Insiste : sans pratique sur la plateforme, la leçon n’est pas acquise. Demande la preuve (capture) avant de passer à la suite.':s.k==='rec'?'Fais redire les trois points sans regarder l’écran. Si l’élève hésite, retourne à la slide concernée.':s.k==='pred'?'Laisse 20 à 30 secondes de réflexion avant de révéler la réponse. L’erreur de l’élève est plus utile que la bonne réponse donnée tout de suite.':s.k==='warn'?'Raconte une erreur réelle de débutant pour chaque point. Rappelle : le trading comporte un risque de perte.':'Prends le temps : une idée à la fois. Demande à l’élève de reformuler avant de continuer.';
+const STT=(s,l)=>s.h||s.t||(s.k==='cov'?l.t:s.k==='ex'?l.ex.h:s.k==='rec'?'À retenir':'QCM de validation');
+let CH=null;try{CH=new BroadcastChannel('smc_pres')}catch(e){}
+function pushNotes(){if(!S||!CH||!S.s[S.i])return;const s=S.s[S.i],nx=S.s[S.i+1];CH.postMessage({l:S.l.t,i:S.i+1,tot:S.s.length,h:STT(s,S.l),n:s.n||NOTE(s,S.l),nx:nx?STT(nx,S.l):'Fin de la leçon'})}
+function presenter(){const w=window.open('','smc_presenter','width=560,height=680');if(!w)return;w.document.write(`<!doctype html><meta charset=utf-8><title>Notes du formateur</title><body style="margin:0;background:#0B1220;color:#EAF1FF;font:17px/1.55 system-ui;padding:18px"><div id=a style="color:#F0B90B;font-weight:700;letter-spacing:.1em;font-size:12px"></div><h2 id=h style="margin:6px 0 12px"></h2><div id=n style="font-size:19px"></div><p style="color:#8FA3C8;margin-top:20px">Ensuite : <b id=x></b></p><p style="color:#8FA3C8;font-size:12px">Cette fenêtre est séparée : ne partage que la fenêtre du cours à tes élèves.</p><script>const c=new BroadcastChannel('smc_pres');c.onmessage=e=>{const d=e.data;a.textContent=d.l+' · '+d.i+' / '+d.tot;h.textContent=d.h;n.textContent=d.n;x.textContent=d.nx}<\/script>`);w.document.close();setTimeout(pushNotes,400)}
+function formateur(l){if(!isCoach())return;$('.fiche')?.remove();const sl=slidesOf(l);const d=document.createElement('div');d.className='fiche';d.innerHTML=`<div class="pg"><div class="wlogo f">${LOGO(560)}</div><div class="tb"><button id="pp">⬇ Télécharger (PDF)</button><button class="g" id="fx">✕ Fermer</button></div><div class="fh">${BRAND(48)}<div class="fm"><span>Fiche formateur — confidentielle</span><span>${l.min} min</span></div></div><h1>${l.t}</h1><p class="obj"><b>Objectif.</b> ${l.obj}</p><p class="lead">Déroule la leçon slide par slide. Ne partage pas ce document à l’écran : ouvre-le sur ton propre écran ou imprime-le. Pour des notes synchronisées pendant le cours, appuie sur la touche P dans le diaporama : une fenêtre séparée s’ouvre.</p><table class="ft"><tr><th>#</th><th>Slide</th><th>Ce que tu dis et fais</th></tr>${sl.map((s,i)=>`<tr><td>${i+1}</td><td><b>${STT(s,l)}</b></td><td>${s.n||NOTE(s,l)}</td></tr>`).join('')}</table></div>`;document.body.appendChild(d);$('#fx',d).onclick=()=>d.remove();$('#pp',d).onclick=()=>{let p=$('#pr');p?.remove();p=document.createElement('div');p.id='pr';p.innerHTML=`<div class="pg">${d.querySelector('.pg').innerHTML}</div>`;p.querySelector('.tb').remove();document.body.appendChild(p);window.print();setTimeout(()=>p.remove(),500)}}
+function bindSess(v){v.querySelectorAll('#seg button').forEach(b=>b.onclick=()=>{v.querySelectorAll('#seg button').forEach(x=>x.className='g');b.className='on';$('#sdia',v).innerHTML=D.sessions(b.dataset.s)})}
+
+/* ---------- QCM ---------- */
+function pick(key,len){const u=USED[key]||[];let c=[...Array(len).keys()].filter(i=>!u.includes(i));if(!c.length){USED[key]=[];c=[...Array(len).keys()]}const i=c[Math.random()*c.length|0];USED[key]=[...(USED[key]||[]),i];LS.set('smc_used',USED);return i}
+function runQuiz(v,l,fams,o){const Q=fams.map((f,fi)=>{const k=(f.key||l.id+':'+fi);const x=f.v[pick(k,f.v.length)];return{q:x[0],g:x[1],o:shuf(x.slice(1)),w:f.w,ok:null,t:f.t||''}});let n=0,kh=null;const e2=s=>String(s).replace(/</g,'&lt;');
+ const stopKey=()=>{if(kh){document.removeEventListener('keydown',kh);kh=null}};
+ const draw=()=>{stopKey();
+  if(n>=Q.length){const ok=Q.filter(q=>q.ok).length,need=Math.ceil(Q.length*o.pass),pass=ok>=need;if(pass)o.done();
+   v.innerHTML=`<div class="eye">Résultat</div><h2>${pass?'✅ '+o.label:'Pas encore'} — ${ok} / ${Q.length}</h2><p class="sub">${pass?'Bien joué.':`Il faut ${need} bonnes réponses. Relis la fiche puis recommence : les questions seront différentes.`}</p>${Q.filter(q=>!q.ok).map(q=>`<div class="rev"><b>${e2(q.q)}</b><br>Bonne réponse : <b style="color:var(--up)">${e2(q.g)}</b>${q.w?`<br><span class="sub">${q.w}</span>`:''}</div>`).join('')}<div class="row" style="margin-top:12px">${pass?'':'<button id="rt">Recommencer (autres questions)</button><button class="g" id="fi">📄 Relire la fiche</button>'}<button class="${pass?'':'g'}" id="ex2">Fermer</button></div>`;
+   $('#ex2',v).onclick=()=>{if(S&&S.s&&S.s.length&&S.el&&S.el.contains(v))close();else{S&&S.el&&S.el.remove();S=null;home()}};if($('#rt',v))$('#rt',v).onclick=()=>runQuiz(v,l,fams,o);if($('#fi',v))$('#fi',v).onclick=()=>fiche(l.fiche?l:L.find(x=>x.fiche)||l);return}
+  const q=Q[n];v.innerHTML=`<div class="eye">Question ${n+1} / ${Q.length}${q.t?' · '+q.t:''}</div><div class="q"><h3>${e2(q.q)}</h3>${q.o.map((x,i)=>`<button class="opt" data-i="${i}"><kbd>${'ABCD'[i]}</kbd>${e2(x)}</button>`).join('')}<div id="fb"></div></div>`;
+  const pickA=b=>{if(q.ok!==null)return;const good=b.textContent.slice(1)===q.g;q.ok=good;b.classList.add(good?'ok':'ko');v.querySelectorAll('.opt').forEach(x=>{if(x.textContent.slice(1)===q.g)x.classList.add('ok')});$('#fb',v).innerHTML=`<div class="fb ${good?'ok':'ko'}"><b>${good?'Exact.':'Pas tout à fait.'}</b> ${q.w||''}<div style="margin-top:8px"><button id="nq">${n+1<Q.length?'Question suivante ›':'Voir le résultat'}</button></div></div>`;$('#nq',v).onclick=()=>{n++;draw()}};
+  v.querySelectorAll('.opt').forEach(b=>b.onclick=()=>pickA(b));
+  kh=e=>{if(!v.isConnected){stopKey();return}const i='abcd'.indexOf(e.key.toLowerCase());if(e.key.length===1&&i>-1&&q.ok===null&&v.querySelectorAll('.opt')[i])pickA(v.querySelectorAll('.opt')[i]);else if(e.key==='Enter'&&q.ok!==null&&$('#nq',v))$('#nq',v).click()};document.addEventListener('keydown',kh)};
+ draw()}
+function quizOnly(l){S=null;const d=document.createElement('div');d.className='dk';d.innerHTML=`<div class="dk-st"><div class="dk-v"></div></div><div class="dk-bar"><button class="g" id="cl">✕ Fermer</button></div>${wmk()}`;document.body.appendChild(d);S={l,s:[],el:d,key:()=>{}};$('#cl',d).onclick=()=>{d.remove();S=null;home()};runQuiz($('.dk-v',d),l,l.fam,{pass:.75,done:()=>{DONE[l.id]=1;LS.set('smc_done',DONE)},label:'Leçon validée'});
+ const fix=$('#cl',d);fix.onclick=()=>{d.remove();S=null;home()}}
+function exam(lv){L=lessons();const all=[];L.filter(l=>l.lv===lv).forEach(l=>l.fam.forEach((f,i)=>all.push({...f,key:l.id+':'+i,t:l.t})));const fams=shuf(all).slice(0,20);const d=document.createElement('div');d.className='dk';d.innerHTML=`<div class="dk-st"><div class="dk-v"></div></div><div class="dk-bar"><button class="g" id="cl">✕ Quitter le test</button></div>${wmk()}`;document.body.appendChild(d);S={l:{id:'EX'},s:[],el:d,key:()=>{}};
+ const l={id:lv+'EX'};$('#cl',d).onclick=()=>{d.remove();S=null;home()};runQuiz($('.dk-v',d),l,fams,{pass:.8,done:()=>{DONE['EX_'+lv]=1;LS.set('smc_done',DONE)},label:EXL[lv]+' réussi'})}
+
+/* ---------- fiche écrite ---------- */
+function ficheHTML(l){const f=l.fiche||{};const h=(a)=>a.map(x=>`<p>${x}</p>`).join('');const P=(window.SMC_PLAN.find(p=>p.id===l.lv)||{}).t||'';return `<div class="fh">${BRAND(48)}<div class="fm"><span>${P}</span><span>Élève : <b>${who().replace(' · usage personnel','')}</b></span></div></div><h1>${l.t}</h1><p class="obj"><b>Objectif.</b> ${l.obj} <span class="dur">⏱ ${l.min} min</span></p>${f.intro?`<p class="lead">${f.intro}</p>`:''}${(f.sec||[]).map(s=>`<h2>${s.h}</h2>${s.p?h(s.p):''}${s.ul?`<ul>${s.ul.map(x=>`<li>${x}</li>`).join('')}</ul>`:''}${s.tb?`<table class="ft"><tr>${s.tb[0].map(c=>`<th>${c}</th>`).join('')}</tr>${s.tb.slice(1).map(r=>`<tr>${r.map(c=>`<td>${c}</td>`).join('')}</tr>`).join('')}</table>`:''}`).join('')}${f.pit?`<h2>Erreurs fréquentes</h2><div class="pit"><ul>${f.pit.map(x=>`<li>${x}</li>`).join('')}</ul></div>`:''}${f.gl?`<h2>Glossaire</h2><dl>${f.gl.map(g=>`<dt>${g[0]}</dt><dd>${g[1]}</dd>`).join('')}</dl>`:''}<h2>Exercice pratique</h2><ol>${l.ex.st.map(x=>`<li>${x}</li>`).join('')}</ol><p><b>Preuve à envoyer :</b> ${l.ex.pr}</p><h2>À retenir</h2><div class="keep"><ul>${l.rec.map(x=>`<li>${x}</li>`).join('')}</ul></div><div class="disc">SMC — Savoir · Maîtriser · Choisir · by Stephen. Document éducatif à usage personnel de ${who().replace(' · usage personnel','')} : ne pas partager ni revendre. Le trading comporte un risque de perte ; aucun gain n’est garanti.</div>`}
+function fiche(l){$('.fiche')?.remove();const d=document.createElement('div');d.className='fiche';d.innerHTML=`<div class="pg"><div class="wlogo f">${LOGO(560)}</div><div class="tb"><button id="pp">⬇ Télécharger (PDF)</button><button class="g" id="fx">✕ Fermer</button></div>${ficheHTML(l)}</div>`;document.body.appendChild(d);$('#fx',d).onclick=()=>d.remove();$('#pp',d).onclick=()=>{let p=$('#pr');p?.remove();p=document.createElement('div');p.id='pr';p.innerHTML=`<div class="wlogo f">${LOGO(560)}</div><div class="wm2">${Array(60).fill(who()+' &nbsp; ').join('')}</div><div class="pg">${ficheHTML(l)}</div>`;document.body.appendChild(p);window.print();setTimeout(()=>p.remove(),500)}}
+
+window.SMC={DONE,LS,LOGO,BRAND,who,formateur,home,lessons:()=>lessons(),fiche,deck};
+document.addEventListener('DOMContentLoaded',()=>{const r=$('#role');if(r)r.value=ROLE();const w=$('#who');if(w&&NAME())w.value=NAME();home()});
+})();
+
+/* SMC by Stephen — logique métier unique (utilisée en local par la page ET par Apps Script) */
+function SMCCORE(db,X){
+ var ALLLV=['BG','IM','AD','MG','OUT'],WEEK=7*864e5;
+ function norm(e){return String(e||'').toLowerCase().trim()}
+ function rid(n){var s='',c='abcdefghjkmnpqrstuvwxyz23456789';for(var i=0;i<n;i++)s+=c[Math.floor(Math.random()*c.length)];return s}
+ function users(){return db.all('users')}
+ function find(e){e=norm(e);return users().filter(function(u){return u.email===e})[0]}
+ function pub(u){if(!u)return null;var o={};for(var k in u)if(k!=='pwd')o[k]=u[k];return o}
+ function save(u){var a=users().filter(function(x){return x.email!==u.email});a.push(u);db.save('users',a)}
+ function log(by,act,target,info){var a=db.all('log');a.push({t:X.now(),by:by,act:act,target:target||'',info:info||''});db.save('log',a.slice(-2000))}
+ function arr(v){return Array.isArray(v)?v:[]}
+ function sessOf(tok){var s=db.all('sess').filter(function(x){return x.tok===tok&&x.exp>X.now()})[0];return s?find(s.email):null}
+ function ok(d){return{ok:true,data:d}} function no(m){return{ok:false,err:m}}
+ function cfg(){var o={};db.all('cfg').forEach(function(r){o[r.k]=r.v});return o}
+ function myStudents(me){return users().filter(function(u){return u.role==='student'&&(me.role==='admin'||u.coach===me.email)})}
+ function purge(){var a=db.all('shots'),keep=[];a.forEach(function(s){if(s.t>X.now()-WEEK)keep.push(s);else if(X.delImg)X.delImg(s.img)});if(keep.length!==a.length)db.save('shots',keep)}
+ var A={
+  register:function(r){
+   var e=norm(r.email);if(!r.name||!e||e.indexOf('@')<1||!r.pwd)return no('Nom, email et mot de passe requis.');
+   if(find(e))return no('Un compte existe déjà avec cet email.');
+   var first=users().length===0,co=r.coach?users().filter(function(u){return u.code===String(r.coach).toLowerCase()})[0]:null;
+   var u={email:e,name:String(r.name).trim(),pwd:r.pwd,role:first?'admin':'student',status:first?'active':'pending',lv:first?ALLLV:['BG'],open:[],blk:[],coach:co?co.email:'',cohort:'',done:{},created:X.now(),code:first?rid(6):''};
+   save(u);log(e,first?'création du compte administrateur':'demande d’accès',e,co?'coach '+co.email:'sans coach');
+   return ok({user:pub(u),first:first});},
+  login:function(r){
+   var u=find(r.email);if(!u||u.pwd!==r.pwd)return no('Email ou mot de passe incorrect.');
+   if(u.status==='blocked')return no('Accès bloqué. Contacte le formateur.');
+   var tok=rid(24),s=db.all('sess').filter(function(x){return x.exp>X.now()});s.push({tok:tok,email:u.email,exp:X.now()+30*864e5});db.save('sess',s);
+   return ok({token:tok,user:pub(u)});},
+  me:function(r,me){return ok({user:pub(me)})},
+  users:function(r,me){if(me.role==='student')return no('Réservé.');return ok(me.role==='admin'?users().map(pub):myStudents(me).map(pub))},
+  userSet:function(r,me){
+   if(me.role!=='admin')return no('Réservé à l’administrateur.');var u=find(r.email);if(!u)return no('Introuvable.');
+   ['status','role','lv','open','blk','coach','cohort','name'].forEach(function(k){if(r.patch&&r.patch[k]!==undefined)u[k]=r.patch[k]});
+   if(u.role==='coach'&&!u.code)u.code=rid(6);save(u);log(me.email,'modification utilisateur',u.email,JSON.stringify(r.patch));return ok({user:pub(u)});},
+  userCreate:function(r,me){
+   if(me.role!=='admin')return no('Réservé à l’administrateur.');var e=norm(r.email);if(!e||!r.name||!r.pwd)return no('Champs requis.');if(find(e))return no('Email déjà utilisé.');
+   var role=r.role==='coach'?'coach':'student',u={email:e,name:r.name,pwd:r.pwd,role:role,status:'active',lv:role==='coach'?ALLLV:['BG'],open:[],blk:[],coach:'',cohort:'',done:{},created:X.now(),code:role==='coach'?rid(6):''};
+   save(u);log(me.email,'création de compte '+role,e);return ok({user:pub(u)});},
+  progress:function(r,me){
+   if(r.done)for(var k in r.done)me.done[k]=1;
+   if(me.done.EX_BG&&me.lv.indexOf('IM')<0&&me.role==='student'){me.lv.push('IM');log(me.email,'test d’entrée réussi → niveau Intermediate ouvert',me.email)}
+   save(me);return ok({user:pub(me)});},
+  payAdd:function(r,me){
+   if(me.role!=='admin')return no('Réservé à l’administrateur.');var u=find(r.email);if(!u)return no('Élève introuvable.');var amt=Number(r.amount);if(!(amt>0))return no('Montant invalide.');
+   var a=db.all('pay'),d=new Date(X.now()),ym=d.getFullYear()+('0'+(d.getMonth()+1)).slice(-2),n=a.filter(function(p){return String(p.id).indexOf('R-'+ym)===0}).length+1;
+   var p={id:'R-'+ym+'-'+('000'+n).slice(-4),email:u.email,name:u.name,amount:amt,method:r.method||'Espèces',ref:r.ref||'',lv:arr(r.lv),t:X.now(),by:me.email};a.push(p);db.save('pay',a);
+   arr(r.lv).forEach(function(l){if(u.lv.indexOf(l)<0)u.lv.push(l)});if(u.status==='pending')u.status='active';save(u);log(me.email,'paiement enregistré',u.email,p.id+' · '+amt+' Ar · '+p.method);return ok({pay:p});},
+  pays:function(r,me){var a=db.all('pay');return ok(me.role==='admin'?a:a.filter(function(p){return p.email===me.email}))},
+  cfgGet:function(){return ok(cfg())},
+  cfgSet:function(r,me){if(me.role!=='admin')return no('Réservé.');var o=cfg(),rows=[];for(var k in r.v)o[k]=r.v[k];for(var j in o)rows.push({k:j,v:o[j]});db.save('cfg',rows);log(me.email,'tarifs modifiés','',JSON.stringify(r.v));return ok(o);},
+  cohorts:function(r,me){return ok(db.all('cohorts'))},
+  cohortSave:function(r,me){if(me.role!=='admin')return no('Réservé.');var a=db.all('cohorts'),id=r.id||('P'+(a.length+1));a=a.filter(function(c){return c.id!==id});a.push({id:id,name:r.name,start:r.start||'',lv:r.lv||'BG'});db.save('cohorts',a);log(me.email,'promotion enregistrée',id,r.name);return ok(a);},
+  attendSave:function(r,me){if(me.role==='student')return no('Réservé.');var a=db.all('att').filter(function(x){return !(x.cohort===r.cohort&&x.date===r.date)});a.push({cohort:r.cohort,date:r.date,present:arr(r.present),by:me.email});db.save('att',a);log(me.email,'présences enregistrées',r.cohort,r.date);return ok(true);},
+  attends:function(r,me){if(me.role==='student')return no('Réservé.');return ok(db.all('att').filter(function(x){return !r.cohort||x.cohort===r.cohort}))},
+  shotAdd:function(r,me){purge();if(!r.img||r.img.length>900000)return no('Image trop lourde.');var a=db.all('shots'),id=rid(8);a.push({id:id,email:me.email,name:me.name,coach:me.coach,t:X.now(),note:String(r.note||'').slice(0,300),img:X.putImg?X.putImg(id,r.img):r.img});db.save('shots',a);return ok({id:id});},
+  shots:function(r,me){purge();var a=db.all('shots').filter(function(s){return me.role==='admin'||s.coach===me.email||s.email===me.email});return ok(a.map(function(s){return{id:s.id,email:s.email,name:s.name,t:s.t,note:s.note,img:X.getImg?X.getImg(s.img):s.img}}))},
+  eraseCode:function(r,me){var c=String(Math.floor(100000+Math.random()*900000)),s=db.all('sess').filter(function(x){return !(x.email===me.email&&x.erase)});s.push({tok:'E'+me.email,email:me.email,erase:c,exp:X.now()+10*6e4});db.save('sess',s);
+   X.mail(me.email,'SMC by Stephen — code d’effacement','Ton code de confirmation : '+c+' (valable 10 minutes). Si tu n’as rien demandé, ignore ce message.');return ok({sent:true,test:X.test?c:undefined});},
+  eraseConfirm:function(r,me){var s=db.all('sess').filter(function(x){return x.email===me.email&&String(x.erase)===String(r.code)&&x.exp>X.now()})[0];if(!s)return no('Code incorrect ou expiré.');
+   db.save('sess',db.all('sess').filter(function(x){return !x.erase||x.email!==me.email}));db.save('shots',db.all('shots').filter(function(x){if(x.email===me.email){if(X.delImg)X.delImg(x.img);return false}return true}));me.done={};save(me);log(me.email,'effacement des données confirmé par code',me.email);return ok(true);},
+  lesson:function(r,me){var l=X.lesson&&X.lesson(r.id);if(!l)return no('Contenu indisponible.');
+   if(me.role==='student'&&!(me.status==='active'&&me.blk.indexOf(l.id)<0&&(me.lv.indexOf(l.lv)>=0||me.open.indexOf(l.id)>=0)))return no('Accès non ouvert pour cette leçon.');return ok(l);},
+  levelFam:function(r,me){if(ALLLV.indexOf(r.lv)<0||!X.byLevel)return no('Contenu indisponible.');
+   if(me.role==='student'&&!(me.status==='active'&&(r.lv==='BG'||me.lv.indexOf(r.lv)>=0)))return no('Test non accessible.');
+   return ok(X.byLevel(r.lv).map(function(l){return{id:l.id,fam:l.fam,why:l.why}}));},
+  log:function(r,me){if(me.role!=='admin')return no('Réservé.');return ok(db.all('log').slice(-300).reverse())}
+ };
+ return function(r){
+  try{var pubA={register:1,login:1,cfgGet:1};var me=pubA[r.action]?null:sessOf(r.token);
+   if(!pubA[r.action]&&!me)return no('Session expirée : reconnecte-toi.');
+   if(me&&me.status==='blocked')return no('Accès bloqué.');
+   if(!A[r.action])return no('Action inconnue.');return A[r.action](r,me);}catch(e){return no('Erreur : '+e.message)}
+ };
+}
+
+/* SMC by Stephen — plateforme (interface). PF_URL vide = mode test local (données dans ce navigateur). */
+(function(){
+const PF_URL='https://script.google.com/macros/s/AKfycbz60gRpTUKl8y5n3PUDGp4oowr-bOwLmawrS0SLI9UF1RYwQ3vh3L6EGI08LnXsYH0/exec';
+const $=(s,r=document)=>r.querySelector(s),esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const LSg=(k,d)=>{try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v)}catch(e){return d}},LSs=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}};
+const LVN={BG:'Beginner',IM:'Intermediate',AD:'Advanced',MG:'Management',OUT:'Boîte à outils'},LVS=Object.keys(LVN);
+const fmt=t=>new Date(t).toLocaleString('fr-FR',{dateStyle:'short',timeStyle:'short'}),ar=n=>Number(n).toLocaleString('fr-FR')+' Ar';
+/* ---- hash ---- */
+async function hash(s){try{const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode('smc|'+s));return[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('')}catch(e){let h1=0xdeadbeef,h2=0x41c6ce57;for(let i=0;i<s.length;i++){const c=s.charCodeAt(i);h1=Math.imul(h1^c,2654435761);h2=Math.imul(h2^c,1597334677)}return'f'+(h1>>>0).toString(16)+(h2>>>0).toString(16)}}
+/* ---- backend : local ou Apps Script ---- */
+const LDB={all:t=>LSg('smc_pf_'+t,[]),save:(t,r)=>LSs('smc_pf_'+t,r)};
+const LX={now:()=>Date.now(),test:true,mail:()=>{}};
+const core=SMCCORE(LDB,LX);
+async function api(action,data){
+ const req=Object.assign({action,token:(LSg('smc_sess',{})||{}).token},data||{});
+ if(!PF_URL)return core(JSON.parse(JSON.stringify(req)));
+ try{const r=await fetch(PF_URL,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify(req)});return await r.json()}catch(e){return{ok:false,err:'Connexion impossible. Vérifie ta connexion internet.'}}}
+/* ---- session ---- */
+let U=(LSg('smc_sess',{})||{}).user||null;
+function setSess(tok,u){U=u;LSs('smc_sess',{token:tok,user:u});try{localStorage.setItem('smc_role',u.role==='student'?'eleve':'coach');localStorage.setItem('smc_name',u.name)}catch(e){}
+ const r=$('#role'),w=$('#who');if(r)r.value=u.role==='student'?'eleve':'coach';if(w)w.value=u.name;
+ const h=$('.top .row');if(h)h.style.display='none';
+ if(u.done){Object.assign(SMC.DONE,u.done);SMC.LS.set('smc_done',SMC.DONE)}}
+function logout(){try{localStorage.removeItem('smc_sess')}catch(e){}U=null;const b=$('#pfbar');if(b)b.remove();PF.gate()}
+const m=()=>$('#m');
+/* ---- barre ---- */
+function bar(act){let b=$('#pfbar');if(!b){b=document.createElement('nav');b.id='pfbar';m().before(b)}
+ const it=[['cours','📚 Cours'],U.role==='student'?['espace','🧑‍🎓 Mon espace']:null,U.role!=='student'?['coach','🎙 Mes élèves']:null,U.role==='admin'?['admin','⚙️ Administration']:null,['outils','🧰 Outils'],['legal','⚖️ Règles & risques']].filter(Boolean);
+ b.innerHTML=`<span class="who">${SMC.LOGO?SMC.LOGO(18):''} <b>${esc(U.name)}</b><small>${U.role==='admin'?'Administrateur':U.role==='coach'?'Formateur':'Élève'}</small></span>`+it.map(x=>`<button class="${act===x[0]?'on':'g'}" data-v="${x[0]}">${x[1]}</button>`).join('')+`<button class="g" data-v="out">Quitter</button>`;
+ b.onclick=e=>{const v=e.target.closest('button')?.dataset.v;if(!v)return;if(v==='out')logout();else PF.view(v)}}
+/* ---- auth ---- */
+function authView(mode){
+ const code=new URLSearchParams(location.search).get('c')||LSg('smc_coachcode','');if(code)LSs('smc_coachcode',code);
+ const reg=mode==='reg';
+ m().innerHTML=`<div class="auth"><div class="logo">${SMC.BRAND?SMC.BRAND(54):''}</div><h2>${reg?'Demander mon accès':'Connexion'}</h2><p class="sub">${reg?'Ta demande est examinée par le formateur. Tu recevras l’accès dès sa validation.':'Content de te revoir.'}</p>
+ <form id="af">${reg?'<label>Nom complet<input name="name" required autocomplete="name"></label>':''}<label>Email<input name="email" type="email" required autocomplete="email"></label><label>Mot de passe<input name="pwd" type="password" required minlength="6" autocomplete="${reg?'new-password':'current-password'}"></label>
+ ${reg?`<label>Code de ton formateur (facultatif)<input name="coach" value="${esc(code)}" placeholder="ex. k3x9ab"></label><label class="ck"><input type="checkbox" required> J’ai lu et j’accepte les <a href="#" data-l="1">conditions, la politique de remboursement et l’avertissement sur les risques</a>.</label>`:''}
+ <div id="ae" class="err"></div><button class="pri">${reg?'Envoyer ma demande':'Se connecter'}</button></form>
+ <p class="sub"><a href="#" id="sw">${reg?'J’ai déjà un compte':'Pas encore de compte ? Demander l’accès'}</a></p></div>`;
+ $('#sw').onclick=e=>{e.preventDefault();authView(reg?'login':'reg')};
+ const lk=$('[data-l]');if(lk)lk.onclick=e=>{e.preventDefault();legalModal()};
+ $('#af').onsubmit=async e=>{e.preventDefault();const f=Object.fromEntries(new FormData(e.target));f.pwd=await hash(f.email.toLowerCase().trim()+':'+f.pwd);
+  const r=await api(reg?'register':'login',f);if(!r.ok){$('#ae').textContent=r.err;return}
+  if(reg){const l=await api('login',{email:f.email,pwd:f.pwd});if(l.ok){LSs('smc_sess',{token:l.data.token,user:l.data.user});setSess(l.data.token,l.data.user)}else{authView('login');return}}
+  else setSess(r.data.token,r.data.user);if(PF.gate())SMC.home()}}
+function pendingView(){m().innerHTML=`<div class="auth"><div class="logo">${SMC.BRAND?SMC.BRAND(54):''}</div><h2>Demande envoyée ✅</h2><p>Bonjour <b>${esc(U.name)}</b>, ta demande d’accès est en cours de validation par le formateur. Reviens plus tard ou actualise.</p><div class="row"><button id="rf">↻ Actualiser</button><button class="g" id="lo">Quitter</button></div></div>`;$('#rf').onclick=refresh;$('#lo').onclick=logout}
+function blockedView(){m().innerHTML=`<div class="auth"><h2>Accès bloqué</h2><p>Ton accès est suspendu. Contacte ton formateur.</p><button class="g" id="lo">Quitter</button></div>`;$('#lo').onclick=logout}
+async function refresh(){const r=await api('me');if(r.ok){const t=LSg('smc_sess',{}).token,ch=r.data.user.status!==U.status;setSess(t,r.data.user);if(ch){if(PF.gate())SMC.home()}else if(U.status==='pending')pendingView()}else if(/Session/.test(r.err||'')){logout()}}
+/* ---- modals / helpers ---- */
+function modal(html){const d=document.createElement('div');d.className='pfm';d.innerHTML=`<div class="pfc"><button class="g x">✕</button>${html}</div>`;document.body.appendChild(d);d.onclick=e=>{if(e.target===d||e.target.classList.contains('x'))d.remove()};return d}
+const LEGAL=[['Conditions générales (CGV)','<p>SMC by Stephen est une formation éducative au trading (méthode Smart Money Concepts). Elle ne constitue ni un conseil en investissement, ni une promesse de gains.</p><p>L’inscription est validée par le formateur. Les tarifs en vigueur sont affichés dans l’application. Le paiement s’effectue par mobile money (MVola, Orange Money, Airtel Money) ou en espèces ; un reçu numéroté est remis pour chaque paiement.</p><p>Les contenus (cours, fiches) sont à <b>usage personnel</b> : ils portent le nom de l’élève et ne peuvent être ni copiés, ni partagés, ni revendus.</p>'],['Politique de remboursement','<p>Un niveau dont l’accès a été ouvert n’est pas remboursable, sauf geste commercial du formateur. Avant l’ouverture de l’accès, le paiement peut être remboursé sur demande écrite. En cas de doute, l’élève contacte le formateur avant de payer.</p><p><i>Texte à valider/adapter par le formateur.</i></p>'],['Règlement intérieur','<ul><li>Respect du formateur et des autres élèves.</li><li>Ponctualité et participation aux séances en direct.</li><li>Aucun partage de comptes, de cours ni de captures d’autres élèves.</li><li>Les exercices se font sur <b>compte démo</b> uniquement.</li><li>Aucune pression pour déposer de l’argent chez un broker : la formation ne perçoit aucune commission d’affiliation.</li></ul>'],['Avertissement sur les risques','<p><b>Le trading comporte un risque élevé de perte, pouvant aller jusqu’à la totalité du capital.</b> Les performances passées ne préjugent pas des performances futures. Ne tradez jamais de l’argent dont vous avez besoin pour vivre. Le levier amplifie gains <u>et</u> pertes. Cette formation est éducative et ne garantit aucun résultat.</p>'],['Données personnelles','<p>Ton nom, ton email et ta progression servent uniquement au suivi pédagogique. Ton journal de trading reste <b>sur ton appareil</b>. Tu peux effacer tes données à tout moment (code de confirmation envoyé par email) depuis « Outils ».</p>']];
+const legalHTML=()=>LEGAL.map(x=>`<h3>${x[0]}</h3>${x[1]}`).join('');
+const legalModal=()=>modal(`<h2>Règles & risques</h2>${legalHTML()}`);
+/* ---- vues ---- */
+const V={};
+V.legal=()=>{m().innerHTML=`<div class="pg"><h2>Règles & avertissements</h2>${legalHTML()}</div>`};
+V.cours=()=>SMC.home();
+V.espace=async()=>{
+ const pr=await api('pays'),ps=pr.ok?pr.data:[],done=SMC.DONE,all=SMC.lessons().filter(l=>U.lv.indexOf(l.lv)>=0||U.open.indexOf(l.id)>=0),k=all.filter(l=>done[l.id]).length,pc=all.length?Math.round(100*k/all.length):0;
+ m().innerHTML=`<div class="pg"><h2>Bonjour ${esc(U.name)}</h2><div class="card"><b>Ma progression</b><div class="pb"><i style="width:${pc}%"></i></div><small>${k} leçons validées sur ${all.length} ouvertes (${pc} %)</small></div>
+ <div class="card"><b>Mes accès</b><div class="chips">${LVS.map(l=>`<span class="chip ${U.lv.indexOf(l)>=0?'on':''}">${U.lv.indexOf(l)>=0?'✓':'🔒'} ${LVN[l]}</span>`).join('')}</div><small>Pour ouvrir un niveau, paie ton inscription et ton formateur l’active. Réussir le <b>test d’entrée</b> (examen Beginner) ouvre directement Intermediate.</small></div>
+ <div class="card"><b>Mes reçus</b>${ps.length?`<table class="tb"><tr><th>N°</th><th>Date</th><th>Montant</th><th>Mode</th><th></th></tr>${ps.map(p=>`<tr><td>${p.id}</td><td>${fmt(p.t)}</td><td>${ar(p.amount)}</td><td>${esc(p.method)}</td><td><button class="g" data-r="${p.id}">Reçu</button></td></tr>`).join('')}</table>`:'<small>Aucun paiement enregistré.</small>'}</div></div>`;
+ m().onclick=e=>{const id=e.target.dataset.r;if(id)receipt(ps.find(p=>p.id===id))}};
+function receipt(p){const w=window.open('','_blank');if(!w)return;w.document.write(`<title>Reçu ${p.id}</title><body style="font-family:sans-serif;max-width:560px;margin:30px auto;color:#111"><div style="display:flex;gap:12px;align-items:center">${SMC.LOGO(40)}<div><h2 style="margin:0">SMC by Stephen</h2><small>Savoir · Maîtriser · Choisir</small></div></div><hr><h3>Reçu n° ${p.id}</h3><p>Date : ${fmt(p.t)}</p><p>Reçu de : <b>${esc(p.name)}</b></p><p>Montant : <b>${ar(p.amount)}</b></p><p>Mode : ${esc(p.method)} ${p.ref?'· Réf. '+esc(p.ref):''}</p><p>Objet : accès ${p.lv.map(l=>LVN[l]).join(', ')||'formation'}</p><hr><small>Formation éducative — aucune promesse de gain. Document généré par l’application.</small><script>setTimeout(()=>print(),300)<\/script>`);w.document.close()}
+V.coach=async()=>{
+ const r=await api('users'),us=r.ok?r.data:[],link=location.href.split('?')[0]+'?c='+(U.code||'');
+ m().innerHTML=`<div class="pg"><h2>Mes élèves</h2>${U.code?`<div class="card"><b>Mon lien personnel</b><br><code>${esc(link)}</code><br><small>Les élèves qui s’inscrivent avec ce lien te sont rattachés automatiquement (le formateur principal valide l’accès).</small><div class="row"><button id="cp">Copier</button></div></div>`:''}
+ <div class="card"><table class="tb"><tr><th>Élève</th><th>Statut</th><th>Niveaux</th><th>Leçons faites</th></tr>${us.filter(u=>u.role==='student').map(u=>`<tr><td>${esc(u.name)}<br><small>${esc(u.email)}</small></td><td>${st(u.status)}</td><td>${u.lv.join(' ')}</td><td>${Object.keys(u.done||{}).filter(k=>!/^EX_/.test(k)).length}</td></tr>`).join('')||'<tr><td colspan=4><small>Aucun élève pour l’instant.</small></td></tr>'}</table></div>
+ <div class="card"><b>Captures MT5 reçues</b> <small>(visibles 7 jours puis supprimées)</small><div id="sh" class="shots">…</div></div></div>`;
+ const c=$('#cp');if(c)c.onclick=()=>{navigator.clipboard&&navigator.clipboard.writeText(link);c.textContent='Copié ✓'};
+ const s=await api('shots');$('#sh').innerHTML=s.ok&&s.data.length?s.data.sort((a,b)=>b.t-a.t).map(x=>`<figure><img src="${x.img}" loading="lazy"><figcaption><b>${esc(x.name)}</b> · ${fmt(x.t)}<br>${esc(x.note)}</figcaption></figure>`).join(''):'<small>Aucune capture.</small>'};
+const st=s=>`<span class="chip ${s==='active'?'on':s==='blocked'?'bad':''}">${s==='active'?'actif':s==='blocked'?'bloqué':'en attente'}</span>`;
+V.outils=()=>{
+ const jr=LSg('smc_journal',[]);
+ m().innerHTML=`<div class="pg"><h2>Outils</h2>
+ <div class="card"><b>Calculateur de lot</b><div class="grid"><label>Capital ($)<input id="c1" type="number" value="1000"></label><label>Risque (%)<input id="c2" type="number" value="1" step="0.1"></label><label>Stop-loss (pips)<input id="c3" type="number" value="20"></label></div><div id="cr" class="res"></div><small>Hypothèse : paire cotée en USD (1 pip ≈ 10 $ par lot standard). Vérifie la valeur du pip pour les autres paires.</small></div>
+ <div class="card"><b>Journal de trading</b> <small>(reste sur cet appareil)</small><div class="grid"><label>Paire<input id="j1" placeholder="EUR/USD"></label><label>Sens<select id="j2"><option>Achat</option><option>Vente</option></select></label><label>Résultat (en R)<input id="j3" type="number" step="0.1" placeholder="ex. 2 ou -1"></label><label>Note<input id="j4"></label></div><button id="ja">Ajouter</button> <button class="g" id="jx">Exporter CSV</button><div id="jl"></div></div>
+ <div class="card"><b>Envoyer une capture MT5 à mon coach</b><br><small>Visible 7 jours, puis supprimée.</small><div class="grid"><label>Capture<input id="s1" type="file" accept="image/*"></label><label>Commentaire<input id="s2"></label></div><button id="sa">Envoyer</button> <span id="sm"></span></div>
+ <div class="card"><b>Mes données</b><br><small>Efface le journal, la progression locale et les captures de cet appareil. Un code est envoyé par email pour confirmer.</small><div class="row"><button class="g" id="er">Effacer mes données…</button></div></div></div>`;
+ const calc=()=>{const c=+$('#c1').value,p=+$('#c2').value,s=+$('#c3').value,r=c*p/100;$('#cr').innerHTML=s>0?`Risque : <b>${r.toFixed(2)} $</b> → lot ≈ <b>${(r/(s*10)).toFixed(2)}</b>`:''};['c1','c2','c3'].forEach(i=>$('#'+i).oninput=calc);calc();
+ const draw=()=>{const j=LSg('smc_journal',[]),w=j.filter(x=>x.r>0).length,tot=j.reduce((a,x)=>a+x.r,0);$('#jl').innerHTML=j.length?`<small>${j.length} trades · gagnants ${Math.round(100*w/j.length)} % · total <b>${tot.toFixed(1)} R</b></small><table class="tb">${j.slice().reverse().slice(0,30).map(x=>`<tr><td>${x.d}</td><td>${esc(x.p)}</td><td>${x.s}</td><td style="color:${x.r>=0?'var(--up)':'var(--dn)'}">${x.r} R</td><td>${esc(x.n)}</td></tr>`).join('')}</table>`:''};draw();
+ $('#ja').onclick=()=>{const r=parseFloat($('#j3').value);if(isNaN(r))return;const j=LSg('smc_journal',[]);j.push({d:new Date().toLocaleDateString('fr-FR'),p:$('#j1').value,s:$('#j2').value,r,n:$('#j4').value});LSs('smc_journal',j);draw()};
+ $('#jx').onclick=()=>{const j=LSg('smc_journal',[]),c='date;paire;sens;R;note\n'+j.map(x=>[x.d,x.p,x.s,x.r,'"'+String(x.n).replace(/"/g,'""')+'"'].join(';')).join('\n'),a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['﻿'+c],{type:'text/csv'}));a.download='journal_SMC.csv';a.click()};
+ $('#sa').onclick=async()=>{const f=$('#s1').files[0];if(!f)return;const img=await shrink(f),r=await api('shotAdd',{img,note:$('#s2').value});$('#sm').textContent=r.ok?'Envoyée ✓':r.err};
+ $('#er').onclick=async()=>{const r=await api('eraseCode');if(!r.ok)return alert(r.err);const d=modal(`<h3>Confirmer l’effacement</h3><p>Un code à 6 chiffres a été envoyé à <b>${esc(U.email)}</b>.${r.data.test?`<br><small>(Mode test : code = <b>${r.data.test}</b>)</small>`:''}</p><input id="ec" placeholder="Code"><div class="row"><button id="eo">Effacer définitivement</button></div><div id="ee" class="err"></div>`);
+  $('#eo',d).onclick=async()=>{const q=await api('eraseConfirm',{code:$('#ec',d).value.trim()});if(!q.ok){$('#ee',d).textContent=q.err;return}['smc_journal','smc_done','smc_used'].forEach(k=>{try{localStorage.removeItem(k)}catch(e){}});for(const k in SMC.DONE)delete SMC.DONE[k];d.remove();alert('Données effacées.');PF.view('cours')}}};
+function shrink(file){return new Promise(res=>{const im=new Image();im.onload=()=>{const k=Math.min(1,1100/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=im.width*k;c.height=im.height*k;c.getContext('2d').drawImage(im,0,0,c.width,c.height);res(c.toDataURL('image/jpeg',.6))};im.src=URL.createObjectURL(file)})}
+/* ---- administration ---- */
+let AT='users';
+V.admin=async()=>{
+ const tabs=[['users','Élèves'],['pay','Paiements'],['tarifs','Tarifs'],['coh','Promotions & présences'],['team','Équipe'],['log','Journal d’actions']];
+ m().innerHTML=`<div class="pg"><h2>Administration</h2><div class="tabs">${tabs.map(t=>`<button class="${AT===t[0]?'on':'g'}" data-t="${t[0]}">${t[1]}</button>`).join('')}</div><div id="ab"></div></div>`;
+ m().onclick=e=>{const t=e.target.dataset.t;if(t){AT=t;V.admin()}};
+ const b=$('#ab'),ur=await api('users'),us=ur.ok?ur.data:[],stu=us.filter(u=>u.role==='student'),coaches=us.filter(u=>u.role!=='student');
+ if(AT==='users'){b.innerHTML=`<div class="card"><table class="tb"><tr><th>Élève</th><th>Statut</th><th>Niveaux</th><th>Coach</th><th>Fait</th><th></th></tr>${stu.map(u=>`<tr><td>${esc(u.name)}<br><small>${esc(u.email)}</small></td><td>${st(u.status)}</td><td>${u.lv.join(' ')}</td><td>${esc((coaches.find(c=>c.email===u.coach)||{}).name||'—')}</td><td>${Object.keys(u.done||{}).filter(k=>!/^EX_/.test(k)).length}</td><td class="act">${u.status!=='active'?`<button data-ok="${u.email}">Valider</button>`:''}${u.status!=='blocked'?`<button class="g" data-bl="${u.email}">Bloquer</button>`:`<button class="g" data-ok="${u.email}">Débloquer</button>`}<button class="g" data-ed="${u.email}">Gérer</button></td></tr>`).join('')||'<tr><td colspan=6><small>Aucun élève.</small></td></tr>'}</table></div>`;
+  b.onclick=async e=>{const d=e.target.dataset;if(d.ok){await api('userSet',{email:d.ok,patch:{status:'active'}});V.admin()}else if(d.bl){if(confirm('Bloquer cet accès ?')){await api('userSet',{email:d.bl,patch:{status:'blocked'}});V.admin()}}else if(d.ed)editUser(stu.find(u=>u.email===d.ed),coaches)}}
+ if(AT==='pay'){const pr=await api('pays'),ps=(pr.ok?pr.data:[]).sort((a,b)=>b.t-a.t),cf=(await api('cfgGet')).data||{};
+  b.innerHTML=`<div class="card"><b>Enregistrer un paiement</b><div class="grid"><label>Élève<select id="p1">${stu.map(u=>`<option value="${u.email}">${esc(u.name)}</option>`).join('')}</select></label><label>Montant (Ar)<input id="p2" type="number"></label><label>Mode<select id="p3"><option>MVola</option><option>Orange Money</option><option>Airtel Money</option><option>Espèces</option></select></label><label>Référence<input id="p4"></label></div><div class="chips">Niveaux débloqués : ${LVS.map(l=>`<label class="ck"><input type="checkbox" value="${l}" class="pl"> ${LVN[l]}${cf['t_'+l]?' ('+ar(cf['t_'+l])+')':''}</label>`).join('')}</div><button id="pa">Enregistrer + reçu</button><div id="pe" class="err"></div></div>
+  <div class="card"><table class="tb"><tr><th>N°</th><th>Date</th><th>Élève</th><th>Montant</th><th>Mode</th><th></th></tr>${ps.map(p=>`<tr><td>${p.id}</td><td>${fmt(p.t)}</td><td>${esc(p.name)}</td><td>${ar(p.amount)}</td><td>${esc(p.method)}</td><td><button class="g" data-r="${p.id}">Reçu</button></td></tr>`).join('')}</table><small>Total encaissé : <b>${ar(ps.reduce((a,p)=>a+p.amount,0))}</b></small></div>`;
+  $('#pa').onclick=async()=>{const r=await api('payAdd',{email:$('#p1').value,amount:$('#p2').value,method:$('#p3').value,ref:$('#p4').value,lv:[...document.querySelectorAll('.pl:checked')].map(x=>x.value)});if(!r.ok)return $('#pe').textContent=r.err;receipt(r.data.pay);V.admin()};
+  b.onclick=e=>{const id=e.target.dataset.r;if(id)receipt(ps.find(p=>p.id===id))}}
+ if(AT==='tarifs'){const cf=(await api('cfgGet')).data||{};b.innerHTML=`<div class="card"><b>Tarifs par niveau (Ariary)</b><div class="grid">${LVS.map(l=>`<label>${LVN[l]}<input data-t="t_${l}" type="number" value="${cf['t_'+l]||''}"></label>`).join('')}</div><button id="ts">Enregistrer</button> <span id="tm"></span></div>`;
+  $('#ts').onclick=async()=>{const v={};document.querySelectorAll('[data-t^=t_]').forEach(i=>v[i.dataset.t]=i.value);const r=await api('cfgSet',{v});$('#tm').textContent=r.ok?'Enregistré ✓':r.err}}
+ if(AT==='coh'){const cr=await api('cohorts'),cs=cr.ok?cr.data:[];
+  b.innerHTML=`<div class="card"><b>Nouvelle promotion</b><div class="grid"><label>Nom<input id="h1" placeholder="Promotion 1"></label><label>Début<input id="h2" type="date"></label></div><button id="hs">Créer</button></div>
+  <div class="card"><b>Présences</b><div class="grid"><label>Promotion<select id="a1">${cs.map(c=>`<option value="${c.id}">${esc(c.name)}</option>`).join('')}</select></label><label>Date<input id="a2" type="date" value="${new Date().toISOString().slice(0,10)}"></label></div><div id="al"></div><button id="as">Enregistrer les présences</button> <span id="am"></span></div>`;
+  $('#hs').onclick=async()=>{if($('#h1').value){await api('cohortSave',{name:$('#h1').value,start:$('#h2').value});V.admin()}};
+  const lst=async()=>{const c=$('#a1').value,mem=stu.filter(u=>u.cohort===c),at=(await api('attends',{cohort:c})).data||[],cur=at.find(x=>x.date===$('#a2').value);$('#al').innerHTML=mem.length?mem.map(u=>`<label class="ck"><input type="checkbox" class="pr" value="${u.email}" ${cur&&cur.present.indexOf(u.email)>=0?'checked':''}> ${esc(u.name)}</label>`).join(''):'<small>Aucun élève dans cette promotion (affecte-les depuis « Élèves › Gérer »).</small>'};
+  if(cs.length){$('#a1').onchange=lst;$('#a2').onchange=lst;lst()}
+  $('#as').onclick=async()=>{const r=await api('attendSave',{cohort:$('#a1').value,date:$('#a2').value,present:[...document.querySelectorAll('.pr:checked')].map(x=>x.value)});$('#am').textContent=r.ok?'Enregistré ✓':r.err}}
+ if(AT==='team'){b.innerHTML=`<div class="card"><b>Créer un compte formateur</b><div class="grid"><label>Nom<input id="t1"></label><label>Email<input id="t2" type="email"></label><label>Mot de passe provisoire<input id="t3"></label></div><button id="tc">Créer</button><div id="te" class="err"></div></div><div class="card"><b>Formateurs</b><table class="tb">${coaches.map(c=>`<tr><td>${esc(c.name)}<br><small>${esc(c.email)}</small></td><td>${c.role}</td><td>code <code>${c.code||''}</code></td></tr>`).join('')}</table></div>`;
+  $('#tc').onclick=async()=>{const e=$('#t2').value;const r=await api('userCreate',{name:$('#t1').value,email:e,pwd:await hash(e.toLowerCase().trim()+':'+$('#t3').value),role:'coach'});if(!r.ok)return $('#te').textContent=r.err;V.admin()}}
+ if(AT==='log'){const r=await api('log');b.innerHTML=`<div class="card"><table class="tb"><tr><th>Date</th><th>Par</th><th>Action</th><th>Cible</th><th>Détail</th></tr>${(r.data||[]).map(x=>`<tr><td>${fmt(x.t)}</td><td>${esc(x.by)}</td><td>${esc(x.act)}</td><td>${esc(x.target)}</td><td><small>${esc(x.info)}</small></td></tr>`).join('')}</table></div>`}
+};
+async function editUser(u,coaches){
+ const cr=(await api('cohorts')).data||[],ls=SMC.lessons();
+ const d=modal(`<h3>${esc(u.name)}</h3><small>${esc(u.email)}</small><p><b>Niveaux ouverts</b></p><div class="chips">${LVS.map(l=>`<label class="ck"><input type="checkbox" class="el" value="${l}" ${u.lv.indexOf(l)>=0?'checked':''}> ${LVN[l]}</label>`).join('')}</div>
+ <div class="grid"><label>Coach<select id="e1"><option value="">—</option>${coaches.map(c=>`<option value="${c.email}" ${u.coach===c.email?'selected':''}>${esc(c.name)}</option>`).join('')}</select></label><label>Promotion<select id="e2"><option value="">—</option>${cr.map(c=>`<option value="${c.id}" ${u.cohort===c.id?'selected':''}>${esc(c.name)}</option>`).join('')}</select></label></div>
+ <p><b>Leçon précise</b> (ouvrir ou bloquer individuellement)</p><div class="grid"><select id="e3">${ls.map(l=>`<option value="${l.id}">${l.id} · ${esc(l.t)}</option>`).join('')}</select><span><button class="g" id="eo">Ouvrir</button> <button class="g" id="eb">Bloquer</button> <button class="g" id="er">Normal</button></span></div><small>Ouvertes : ${u.open.join(', ')||'—'} · Bloquées : ${u.blk.join(', ')||'—'}</small>
+ <div class="row"><button id="es">Enregistrer</button></div>`);
+ const set=async p=>{await api('userSet',{email:u.email,patch:p});d.remove();V.admin()},sel=()=>$('#e3',d).value;
+ $('#eo',d).onclick=()=>set({open:[...new Set([...u.open,sel()])],blk:u.blk.filter(x=>x!==sel())});
+ $('#eb',d).onclick=()=>set({blk:[...new Set([...u.blk,sel()])],open:u.open.filter(x=>x!==sel())});
+ $('#er',d).onclick=()=>set({blk:u.blk.filter(x=>x!==sel()),open:u.open.filter(x=>x!==sel())});
+ $('#es',d).onclick=()=>set({lv:[...d.querySelectorAll('.el:checked')].map(x=>x.value),coach:$('#e1',d).value,cohort:$('#e2',d).value})}
+/* ---- API publique pour le moteur de cours ---- */
+let lastSync=0;
+const PF=window.PF={
+ gate(){
+  if(!U){authView('login');const h=$('.top .row');if(h)h.style.display='none';return false}
+  const h=$('.top .row');if(h)h.style.display='none';
+  if(U.status==='pending'){bar('');pendingView();return false}
+  if(U.status==='blocked'){blockedView();return false}
+  bar(CUR);return true},
+ canOpen(l){if(!U)return false;if(U.role!=='student')return true;if(U.status!=='active')return false;if(U.blk.indexOf(l.id)>=0)return false;return U.lv.indexOf(l.lv)>=0||U.open.indexOf(l.id)>=0},
+ view(v){if(!V[v])return;CUR=v;if(!U)return PF.gate();bar(v);V[v]()},
+ async load(l){if(l.slides)return;const r=await api('lesson',{id:l.id});if(!r.ok)throw new Error(r.err);const raw=window.SMC_L.find(x=>x.id===l.id);Object.assign(raw,r.data);Object.assign(l,r.data,{fam:r.data.fam.map((v,i)=>({w:(r.data.why||[])[i]||'',v}))})},
+ async loadLevel(lv){const L=window.SMC_L.filter(x=>x.lv===lv);if(L.every(x=>x.fam&&x.fam.length))return;const r=await api('levelFam',{lv});if(!r.ok)throw new Error(r.err);r.data.forEach(d=>{const l=L.find(x=>x.id===d.id);if(l){const raw=l;raw.fam=d.fam;raw.why=d.why}})},
+ async sync(done){const now=Date.now();if(!U||now-lastSync<4000)return;lastSync=now;const r=await api('progress',{done});if(r.ok){const t=LSg('smc_sess',{}).token,ol=U.lv.join();setSess(t,r.data.user);if(ol!==U.lv.join()&&CUR==='cours')SMC.home()}else if(/Session/.test(r.err||''))logout()}
+};
+let CUR='cours';
+const css=document.createElement('style');css.textContent=`#pfbar{display:flex;flex-wrap:wrap;gap:6px;align-items:center;padding:8px 14px;border-bottom:1px solid var(--bd,#2a2f3a);position:sticky;top:0;z-index:5;background:var(--bg,#0f1218)}#pfbar .who{margin-right:auto;display:flex;gap:8px;align-items:center}#pfbar small{display:block;opacity:.6;font-size:11px}#pfbar button{padding:6px 10px;font-size:13px}#pfbar button.on{background:var(--ac,#F0B90B);color:#111}
+.auth{max-width:380px;margin:30px auto;padding:20px}.auth .logo{text-align:center;margin-bottom:10px}.auth form,.pg .grid{display:grid;gap:10px}.auth label,.pg label{display:grid;gap:4px;font-size:13px}.auth input,.pg input,.pg select,.pfc input,.pfc select{padding:9px;border-radius:8px;border:1px solid var(--bd,#2a2f3a);background:transparent;color:inherit;font:inherit}.auth .ck,.pg .ck{display:flex;gap:6px;align-items:center}.ck input{width:auto}.err{color:var(--dn,#F6465D);font-size:13px;min-height:16px}.pri{padding:11px}
+.pg{max-width:980px;margin:14px auto;padding:0 14px}.pg .card{border:1px solid var(--bd,#2a2f3a);border-radius:12px;padding:14px;margin:12px 0}.pg .grid{grid-template-columns:repeat(auto-fit,minmax(170px,1fr));margin:10px 0}.tb{width:100%;border-collapse:collapse;font-size:13px}.tb th,.tb td{padding:7px;border-bottom:1px solid var(--bd,#2a2f3a);text-align:left;vertical-align:top}.tb .act button{margin:2px;padding:5px 8px;font-size:12px}
+.chip{display:inline-block;padding:3px 9px;border-radius:99px;border:1px solid var(--bd,#2a2f3a);font-size:12px;margin:2px}.chip.on{background:rgba(46,189,133,.18);border-color:#2EBD85}.chip.bad{background:rgba(246,70,93,.18);border-color:#F6465D}.chips{margin:8px 0}.tabs{display:flex;flex-wrap:wrap;gap:6px}.pb{height:10px;border-radius:9px;background:rgba(255,255,255,.1);margin:8px 0}.pb i{display:block;height:100%;border-radius:9px;background:#2EBD85}.res{margin:8px 0;font-size:16px}.shots{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;margin-top:8px}.shots img{width:100%;border-radius:8px}.shots figcaption{font-size:12px}
+.pfm{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:50;display:grid;place-items:center;padding:14px}.pfc{background:var(--bg,#0f1218);border:1px solid var(--bd,#2a2f3a);border-radius:14px;max-width:560px;width:100%;max-height:88vh;overflow:auto;padding:18px;position:relative}.pfc .x{position:absolute;right:10px;top:10px}`;document.head.appendChild(css);
+})();
+</script><script>if('serviceWorker' in navigator&&location.protocol.startsWith('http'))navigator.serviceWorker.register('sw.js').catch(e=>0)</script></body></html>
